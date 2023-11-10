@@ -13,8 +13,7 @@
       </el-form-item>
       <div class="login-links">
         <!-- 在这里添加注册按钮，点击后跳转到注册页面 -->
-        <!-- <router-link to="/register">Register</router-link> -->
-        <el-button type="text" @click="goToRegister">Register</el-button>
+        <router-link to="/register">Register</router-link>
         <!-- <el-button type="text" @click="goToRegister">Register</el-button> -->
       </div>
     </el-form>

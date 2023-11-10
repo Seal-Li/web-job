@@ -1,24 +1,28 @@
 import {
     createRouter,
     createWebHistory
-} from 'vue-router'
-import type {
-    RouteRecordRaw
-} from 'vue-router'
+} from 'vue-router';
 
-import App from "../App.vue"
+import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
 
 
-const routes: Array < RouteRecordRaw > = [{
-    path: '/',
-    name: 'App',
-    component: Home,
-}, ]
+const routes = [
+    {
+        path: '/',
+        name: 'Login',
+        component: Login,
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        component: Register,
+      },
+]
 
 const router = createRouter({
-    history: createWebHistory(
-        import.meta.env.BASE_URL),
+    history: createWebHistory(),
     routes,
 })
 
-export default router
+export { router };
