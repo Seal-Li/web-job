@@ -1,7 +1,7 @@
 <!-- Login.vue -->
 <template>
   <div class="login-container">
-    <el-form :model="loginForm" :rules="loginRules" label-width="80px" ref="loginForm" class="login-form">
+    <el-form :model="loginForm" label-width="80px" ref="loginForm" class="login-form">
       <el-form-item label="Username" prop="username" :rules="usernameRules">
         <el-input v-model="loginForm.username" placeholder="Enter your username" clearable></el-input>
       </el-form-item>
@@ -11,11 +11,6 @@
       <el-form-item>
         <el-button type="primary" :disabled="!isLoginFormValid" @click="login">Login</el-button>
       </el-form-item>
-      <div class="login-links">
-        <router-link to="/forgot-password">Forgot Password</router-link>
-        <span class="divider">|</span>
-        <router-link to="/register">Register</router-link>
-      </div>
     </el-form>
   </div>
 </template>
@@ -25,8 +20,9 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: '13456789000',
+        password: 'Test123456!',
+        
       },
       usernameRules: [
         { 
@@ -62,7 +58,7 @@ export default {
   },
   computed: {
     isLoginFormValid() {
-      return this.$refs.loginForm && this.$refs.loginForm.validate();
+      return "" != this.loginForm.username && "" != this.loginForm.password;
     }
   },
   methods: {
