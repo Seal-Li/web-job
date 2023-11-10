@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '13456789000',
+        username: 'ZhangSan',
         password: 'Test123456!',
         
       },
@@ -31,8 +31,8 @@ export default {
           trigger: 'blur' 
         },
         { 
-          pattern: /^1((34[0-8])|(8\d{2})|(([35][0-35-9]|4[579]|66|7[35678]|9[1389])\d{1}))\d{7}$/, 
-          message: '只能使用手机号', 
+          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,12}$/, 
+          message: '只能使用英文字符和数字', 
           trigger: 'blur' 
         }
       ],
