@@ -15,6 +15,12 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="registerForm.email" placeholder="Enter your email" clearable></el-input>
         </el-form-item>
+        <el-form-item label="用户类型" prop="userType">
+          <el-select v-model="registerForm.userType" placeholder="Select User Type">
+            <el-option label="Customer" value="Customer"></el-option>
+            <el-option label="Dealer" value="Dealer"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="电话" prop="phoneNumber">
           <el-input v-model="registerForm.phoneNumber" placeholder="Enter your phone number" clearable></el-input>
         </el-form-item>
@@ -33,6 +39,7 @@
           username: 'ZhangSan01',
           password: 'Test1234!',
           confirmPassword: 'Test1234!',
+          userType: 'Customer', // 初始值为 "Customer"
           email: 'example@163.com',
           phoneNumber: '13456789000'
         },
