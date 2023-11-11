@@ -1,8 +1,8 @@
 <!-- App.vue -->
 
 <template>
-    <router-view v-if="!isRegisterPage"></router-view>
-    <Login v-else></Login>
+    <!-- <router-view v-if="!isRegisterPage"></router-view> -->
+    <!-- <Login v-else></Login> -->
   <router-view></router-view>
 </template>
 
