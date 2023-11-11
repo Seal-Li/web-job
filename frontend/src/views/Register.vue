@@ -120,7 +120,7 @@ export default {
       try {
         console.log('Sending request with data:', this.registerForm); // 输出发送的请求数据
         // 发送注册数据到后端
-        const response = await axios.post('/register', this.registerForm);
+        const response = await axios.post('http://localhost:3000/register', this.registerForm);
 
         // 处理后端返回的结果
         console.log(response.data.message); // 输出后端返回的消息

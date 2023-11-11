@@ -86,13 +86,9 @@ CREATE TABLE Admins (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO Admins (admin_id, admin_name, password, email, is_super_admin)
+INSERT INTO Admins (admin_id, admin_name, password, email, telphone, is_super_admin)
 VALUES
-('1', 'admin1', 'password1', 'admin1@example.com', TRUE),
-('2', 'admin2', 'password2', 'admin2@example.com', FALSE),
-('3', 'admin3', 'password3', 'admin3@example.com', FALSE),
-('4', 'admin4', 'password4', 'admin4@example.com', FALSE),
-('5', 'admin5', 'password5', 'admin5@example.com', FALSE);
+('1', 'admin1', 'password1', 'admin1@example.com', '13456789000', TRUE);
 ```
 
 #### 用户&供应商数据表设计
@@ -102,7 +98,7 @@ VALUES
 - 密码（password）：md5加密后的密码
 - 邮箱（email）
 - 手机号（telphone）
-- 用户类型（user_type）：枚举类型，枚举值：Customer（普通用户）、Dealer（供应商）
+- 用户类型（user_type）：Customer（普通用户）、Dealer（经销商）
 - 金额（money）：用户余额
 - 创建时间（create_at）
 - 更新时间（update_at）
@@ -114,20 +110,15 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL, -- md5加密后的密码
     email VARCHAR(100) NOT NULL,
     telphone VARCHAR(100) NOT NULL,
-    user_type ENUM('Customer', 'Dealer') NOT NULL, -- 用户类型（供应商还是普通用户）
+    user_type VARCHAR(50) NOT NULL, -- 用户类型（经销商还是普通用户）
     money DECIMAL(10, 2) NOT NULL DEFAULT 0.00, -- 用户余额
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO Users (user_id, username, password, email, user_type, money)
+INSERT INTO Users (user_id, user_name, password, email, telphone, user_type, money)
 VALUES
-('user1', 'customer1', 'password1', 'customer1@example.com', 'Customer', 10.00),
-('user2', 'Dealer1', 'password2', 'Dealer1@example.com', 'Dealer', 10.00),
-('user3', 'customer2', 'password3', 'customer2@example.com', 'Customer', 10.00),
-('user4', 'Dealer2', 'password4', 'Dealer2@example.com', 'Dealer', 10.00),
-('user5', 'customer3', 'password5', 'customer3@example.com', 'Customer', 10.00),
-('user6', 'Dealer3', 'password6', 'Dealer3@example.com', 'Dealer', 10.00);
+('user1', 'customer1', 'password1', 'customer1@example.com', '13456789000', 'Customer', 10.00);
 ```
 
 #### 产品信息表

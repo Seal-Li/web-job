@@ -1,10 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid');
 const config = require('./config/config.js'); // 引入配置文件
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// 使用 cors 中间件
+app.use(cors());
 
 // 创建一个MySQL连接池
 const pool = mysql.createPool({
@@ -28,7 +32,7 @@ app.post('/register', async (req, res) => {
       const userId = uuidv4();
   
       const insertUserQuery = `
-        INSERT INTO users (user_id, user_name, password, email, telphone, user_type, create_at, update_at)
+        INSERT INTO users (user_id, user_name, password, email, telphone, user_type, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
       `;
   
