@@ -126,7 +126,7 @@ export default {
         console.log(response.data.message); // 输出后端返回的消息
         
         // 注册成功后的处理，例如跳转到登录页面
-        this.$router.push('/login');
+        this.$router.push('/');
       } catch (error) {
         console.error('注册失败', error);
 
