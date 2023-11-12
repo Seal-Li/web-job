@@ -56,7 +56,7 @@ app.post('/login', async (req, res) => {
 // 注册用户的路由
 app.post('/register', async (req, res) => {
   const { username, password, confirmPassword, email, userType, phoneNumber } = req.body;
-
+  console.log(req.body);
   try {
     const connection = await pool.getConnection();
     await connection.beginTransaction();
@@ -73,7 +73,7 @@ app.post('/register', async (req, res) => {
     if (emailResults.length > 0 || phoneNumberResults.length > 0) {
       await connection.rollback();
       connection.release();
-      return res.status(400).json({ message: '该邮箱或手机号已被注册，请尝试找回密码。' });
+      return res.status(400).json({ success: false, message: '该邮箱或手机号已被注册，请尝试找回密码。' });
     }
 
     // 生成用户ID
@@ -90,12 +90,13 @@ app.post('/register', async (req, res) => {
     await connection.commit();
     connection.release();
 
-    res.status(200).json({ message: '注册成功' });
+    res.status(201).json({ success: true, message: '注册成功' });
   } catch (error) {
     console.error('注册失败', error);
-    res.status(500).json({ message: `注册失败: ${error.message || error}` });
+    res.status(500).json({ success: false, message: `注册失败: ${error.message || error}` });
   }
 });
+
 
 // 处理重置密码的路由
 app.post('/reset-password', async (req, res) => {
