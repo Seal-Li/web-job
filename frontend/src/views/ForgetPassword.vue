@@ -92,24 +92,28 @@ export default {
           // Handle the error, you might want to display a generic error message to the user
         });
     },
-
     validateVerificationCode(rule, value, callback) {
       // Implement verification code validation logic
       // Example: Check if the entered code matches the generated code
-      // const isValid = value === this.verificationCode;
-      // isValid ? callback() : callback(new Error('验证码错误'));
+      const isValid = value === this.verificationCode;
+      isValid ? callback() : callback(new Error('验证码错误'));
     },
     validatePassword(rule, value, callback) {
       // Implement password validation logic
       // Example: Check if the password meets your criteria
       // const isValidPassword = ...; // Implement your password criteria check
       // isValidPassword ? callback() : callback(new Error('密码不符合要求'));
+
+      // For example, let's check if the password has at least 6 characters
+      const isValidPassword = value.length >= 6;
+      isValidPassword ? callback() : callback(new Error('密码至少需要6个字符'));
     },
+
     validateConfirmPassword(rule, value, callback) {
-      // Implement confirm password validation logic
-      // Example: Check if the confirm password matches the new password
-      // const isMatch = value === this.formData.newPassword;
-      // isMatch ? callback() : callback(new Error('两次输入的密码不一致'));
+      // 实现确认密码的验证逻辑
+      // 例如：检查确认密码是否与新密码匹配
+      const isMatch = value === this.formData.newPassword;
+      isMatch ? callback() : callback(new Error('两次输入的密码不一致'));
     },
     generateVerificationCode() {
       // Generate a random number between 0 and 1
@@ -131,7 +135,7 @@ export default {
         // 如果更新密码成功
         if (response.data.success) {
           this.$message.success('密码重置成功');
-          this.$router.push('/login');
+          this.$router.push('/');
         } else {
           // 处理更新密码失败的情况，例如显示错误消息
           this.$message.error(response.data.message);
