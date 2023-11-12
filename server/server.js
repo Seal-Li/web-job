@@ -52,9 +52,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
 // 注册用户的路由
 app.post('/register', async (req, res) => {
@@ -133,11 +130,6 @@ app.post('/reset-password', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-
 // 处理检查账号是否存在的路由
 app.post('/check-account-existence', async (req, res) => {
   const { account } = req.body;
@@ -158,4 +150,9 @@ app.post('/check-account-existence', async (req, res) => {
     console.error('Error checking account existence', error);
     res.status(500).json({ exists: false, message: `检查账号是否存在失败: ${error.message || error}` });
   }
+});
+
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
