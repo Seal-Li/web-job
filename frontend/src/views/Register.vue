@@ -38,12 +38,12 @@ export default {
   data() {
     return {
       registerForm: {
-        username: 'ZhangSan',
-        password: 'ZhangSan123!',
-        confirmPassword: 'ZhangSan123!',
-        userType: 'Customer', // 初始值为 "Customer"
-        email: 'zhangsan@163.com',
-        phoneNumber: '13456789',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        userType: '', // 初始值为 "Customer"
+        email: '',
+        phoneNumber: '',
       },
       registerRules: {
         username: [
@@ -139,11 +139,12 @@ export default {
 
         // 处理后端返回的结果
         if (response.data.success) {
-          this.$message.success('注册成功，正在跳转');
+          this.$message.success('注册成功!');
           this.$router.push('/');
         } else {
           // 注册失败，保存错误消息
           this.registrationError = response.data.message || '注册失败'; // 如果没有明确的错误消息，使用默认消息
+          this.$message.error('注册失败: ');
         }
       } catch (error) {
         // 处理注册失败的情况，例如显示错误消息
