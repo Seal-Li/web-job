@@ -27,6 +27,14 @@
       <el-form-item>
         <el-button type="primary" :disabled="!isRegisterFormValid" @click="register">注册</el-button>
       </el-form-item>
+      <el-form-item v-if="registerError" class="error-message">
+        <el-alert
+          title="注册失败"
+          :description="registerError"
+          type="error"
+          show-icon
+        ></el-alert>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -38,12 +46,12 @@ export default {
   data() {
     return {
       registerForm: {
-        username: '',
-        password: '',
-        confirmPassword: '',
+        username: 'ZhangSan',
+        password: 'ZhangSan123!',
+        confirmPassword: 'ZhangSan123!',
         userType: 'Customer', // 初始值为 "Customer"
-        email: '',
-        phoneNumber: ''
+        email: 'zhangsan@163.com',
+        phoneNumber: '13456789000'
       },
       registerRules: {
         username: [
@@ -104,12 +112,19 @@ export default {
               trigger: 'blur' 
           }
         ]
-      }
+      },
+      registerError: '',
     };
   },
   computed: {
     isRegisterFormValid() {
-      return this.registerForm.username.length && this.registerForm.password.length && this.registerForm.confirmPassword.length && this.registerForm.email.length && this.registerForm.phoneNumber.length ;
+      return (
+        this.registerForm.username.length &&
+        this.registerForm.password.length &&
+        this.registerForm.confirmPassword.length &&
+        this.registerForm.email.length &&
+        this.registerForm.phoneNumber.length
+      );
     }
   },
   methods: {
@@ -127,22 +142,23 @@ export default {
     },
     async register() {
       try {
-        // console.log('Sending request with data:', this.registerForm); // 输出发送的请求数据
         // 发送注册数据到后端
         const response = await axios.post('http://localhost:3000/register', this.registerForm);
 
         // 处理后端返回的结果
-        // console.log(response.data.message); // 输出后端返回的消息
-        
-        // 注册成功后的处理，例如跳转到登录页面
-        this.$router.push('/');
+        if (response.data.success) {
+          this.$router.push('/');
+        } else {
+          // 注册失败，显示错误消息
+          this.registerError = response.data.message;
+        }
       } catch (error) {
         console.error('注册失败', error);
 
         // 处理注册失败的情况，例如显示错误消息
-        // this.errorMessage = '注册失败，请检查输入是否正确';
+        this.registerError = '注册失败，请稍后再试';
       }
-    },
+    }
   }
 };
 </script>
@@ -154,7 +170,7 @@ export default {
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('your-background-image-url.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../assets/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
 }
 
 .register-form {
@@ -173,5 +189,9 @@ export default {
 
 .user-type-item .el-select {
   width: 100%;
+}
+
+.error-message {
+  margin-top: 20px;
 }
 </style>
