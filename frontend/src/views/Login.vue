@@ -118,7 +118,7 @@ export default {
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('your-background-image-url.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../assets/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
 }
 
 .login-card {

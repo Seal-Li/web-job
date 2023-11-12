@@ -27,14 +27,6 @@
       <el-form-item>
         <el-button type="primary" :disabled="!isRegisterFormValid" @click="register">注册</el-button>
       </el-form-item>
-      <el-form-item v-if="registerError" class="error-message">
-        <el-alert
-          title="注册失败"
-          :description="registerError"
-          type="error"
-          show-icon
-        ></el-alert>
-      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -51,7 +43,7 @@ export default {
         confirmPassword: 'ZhangSan123!',
         userType: 'Customer', // 初始值为 "Customer"
         email: 'zhangsan@163.com',
-        phoneNumber: '13456789000'
+        phoneNumber: '13456789',
       },
       registerRules: {
         username: [
@@ -113,7 +105,7 @@ export default {
           }
         ]
       },
-      registerError: '',
+      registrationError: '',
     };
   },
   computed: {
@@ -147,16 +139,15 @@ export default {
 
         // 处理后端返回的结果
         if (response.data.success) {
+          this.$message.success('注册成功，正在跳转');
           this.$router.push('/');
         } else {
-          // 注册失败，显示错误消息
-          this.registerError = response.data.message;
+          // 注册失败，保存错误消息
+          this.registrationError = response.data.message || '注册失败'; // 如果没有明确的错误消息，使用默认消息
         }
       } catch (error) {
-        console.error('注册失败', error);
-
         // 处理注册失败的情况，例如显示错误消息
-        this.registerError = '注册失败，请稍后再试';
+        this.registrationError = '注册失败: ' + (error.message || error);
       }
     }
   }
@@ -189,9 +180,5 @@ export default {
 
 .user-type-item .el-select {
   width: 100%;
-}
-
-.error-message {
-  margin-top: 20px;
 }
 </style>
