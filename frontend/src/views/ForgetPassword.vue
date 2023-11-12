@@ -28,94 +28,122 @@
     </div>
 </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        formData: {
-          account: '',
-          verificationCode: '',
-          newPassword: '',
-          confirmPassword: '',
-        },
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      formData: {
+        account: '',
         verificationCode: '',
-        formRules: {
-          account: [
-            { required: true, message: '请输入注册的手机或邮箱', trigger: 'blur' },
-            // Add custom validation rule for account existence check
-            { validator: this.validateAccountExistence, trigger: 'blur' },
-          ],
-          verificationCode: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
-            // Add custom validation rule for verification code check
-            { validator: this.validateVerificationCode, trigger: 'blur' },
-          ],
-          newPassword: [
-            { required: true, message: '请输入新密码', trigger: 'blur' },
-            // Add custom validation rule for password check
-            { validator: this.validatePassword, trigger: 'blur' },
-          ],
-          confirmPassword: [
-            { required: true, message: '请确认新密码', trigger: 'blur' },
-            { validator: this.validateConfirmPassword, trigger: 'blur' },
-          ],
-        },
-      };
+        newPassword: '',
+        confirmPassword: '',
+      },
+      verificationCode: '',
+      formRules: {
+        account: [
+          { required: true, message: '请输入注册的手机号或邮箱', trigger: 'blur' },
+          // Add custom validation rule for account existence check
+          { validator: this.validateAccountExistence, trigger: 'blur' },
+        ],
+        verificationCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          // Add custom validation rule for verification code check
+          { validator: this.validateVerificationCode, trigger: 'blur' },
+        ],
+        newPassword: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          // Add custom validation rule for password check
+          { validator: this.validatePassword, trigger: 'blur' },
+        ],
+        confirmPassword: [
+          { required: true, message: '请确认新密码', trigger: 'blur' },
+          { validator: this.validateConfirmPassword, trigger: 'blur' },
+        ],
+      },
+    };
+  },
+  computed: {
+    isFormValid() {
+      // Add additional conditions as needed
+      return (
+        this.formData.account &&
+        this.formData.verificationCode &&
+        this.formData.newPassword &&
+        this.formData.confirmPassword
+      );
     },
-    computed: {
-      isFormValid() {
-        // Add additional conditions as needed
-        return (
-          this.formData.account &&
-          this.formData.verificationCode &&
-          this.formData.newPassword &&
-          this.formData.confirmPassword
-        );
-      },
+  },
+  methods: {
+    validateAccountExistence(rule, value, callback) {
+      // 验证账号是否存在
+      axios.post('http://localhost:3000/check-account-existence', { account: value })
+        .then(response => {
+          if (response.data.exists) {
+            // Account exists, callback without an error
+            callback();
+          } else {
+            // Account does not exist, callback with an error
+            callback(new Error('账号不存在'));
+          }
+        })
+        .catch(error => {
+          console.error('Error checking account existence', error);
+          // Handle the error, you might want to display a generic error message to the user
+        });
     },
-    methods: {
-      validateAccountExistence(rule, value, callback) {
-        // Implement account existence check logic
-        // You may need to make a request to the backend to check if the account exists
-        // If exists, call callback(); otherwise, call callback(new Error('账号不存在'));
-        // Example: Assume there's a function checkAccountExistence in your API
-        // const exists = await checkAccountExistence(value);
-        // exists ? callback() : callback(new Error('账号不存在'));
-      },
-      validateVerificationCode(rule, value, callback) {
-        // Implement verification code validation logic
-        // Example: Check if the entered code matches the generated code
-        // const isValid = value === this.verificationCode;
-        // isValid ? callback() : callback(new Error('验证码错误'));
-      },
-      validatePassword(rule, value, callback) {
-        // Implement password validation logic
-        // Example: Check if the password meets your criteria
-        // const isValidPassword = ...; // Implement your password criteria check
-        // isValidPassword ? callback() : callback(new Error('密码不符合要求'));
-      },
-      validateConfirmPassword(rule, value, callback) {
-        // Implement confirm password validation logic
-        // Example: Check if the confirm password matches the new password
-        // const isMatch = value === this.formData.newPassword;
-        // isMatch ? callback() : callback(new Error('两次输入的密码不一致'));
-      },
-      generateVerificationCode() {
-        // Generate a random number between 0 and 1
-        const randomValue = Math.random();
-        // Convert the random number to base 36 and take the last 6 characters
-        this.verificationCode = randomValue.toString(36).substr(-6).toUpperCase();
-      },
-      resetPassword() {
-        // Implement the logic to reset the password
-        // Call your backend API to update the password in the database
-        // Example: Assume there's a function resetPassword in your API
-        // await resetPassword(this.formData.account, this.formData.newPassword);
-        this.$message.success('密码重置成功');
-        this.$router.push('/login');
-      },
+
+    validateVerificationCode(rule, value, callback) {
+      // Implement verification code validation logic
+      // Example: Check if the entered code matches the generated code
+      // const isValid = value === this.verificationCode;
+      // isValid ? callback() : callback(new Error('验证码错误'));
     },
-  };
+    validatePassword(rule, value, callback) {
+      // Implement password validation logic
+      // Example: Check if the password meets your criteria
+      // const isValidPassword = ...; // Implement your password criteria check
+      // isValidPassword ? callback() : callback(new Error('密码不符合要求'));
+    },
+    validateConfirmPassword(rule, value, callback) {
+      // Implement confirm password validation logic
+      // Example: Check if the confirm password matches the new password
+      // const isMatch = value === this.formData.newPassword;
+      // isMatch ? callback() : callback(new Error('两次输入的密码不一致'));
+    },
+    generateVerificationCode() {
+      // Generate a random number between 0 and 1
+      const randomValue = Math.random();
+      // Convert the random number to base 36 and take the last 6 characters
+      this.verificationCode = randomValue.toString(36).substr(-6).toUpperCase();
+    },
+    async resetPassword() {
+      try {
+        // 调用后端 API 更新密码
+        const response = await axios.post('http://localhost:3000/reset-password', {
+          account: this.formData.account,
+          newPassword: this.formData.newPassword,
+        });
+
+        // 处理后端返回的结果
+        console.log(response.data.message); // 输出后端返回的消息
+
+        // 如果更新密码成功
+        if (response.data.success) {
+          this.$message.success('密码重置成功');
+          this.$router.push('/login');
+        } else {
+          // 处理更新密码失败的情况，例如显示错误消息
+          this.$message.error(response.data.message);
+        }
+      } catch (error) {
+        console.error('密码重置失败', error);
+        // 处理更新密码失败的情况，例如显示错误消息
+        this.$message.error('密码重置失败，请稍后再试');
+      }
+    },
+  },
+};
 </script>
   
 <style scoped>
