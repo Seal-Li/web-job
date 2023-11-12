@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-checkbox class="remember-psw" v-model="loginForm.remember">记住密码</el-checkbox>
-          <router-link class="forget-link" to="/forget">找回密码</router-link>
+          <router-link class="forget-link" to="/forget-password">找回密码</router-link>
           <router-link class="register-link" to="/register">注册账号</router-link>
         </el-form-item>
         <el-form-item>
