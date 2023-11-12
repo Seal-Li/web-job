@@ -1,9 +1,9 @@
 <!-- App.vue -->
 
 <template>
-    <!-- <router-view v-if="!isRegisterPage"></router-view> -->
-    <!-- <Login v-else></Login> -->
-  <router-view></router-view>
+  <div class="App">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script lang="ts">
@@ -37,4 +37,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.App {
+  background-image: url('./assets/bgpic.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh; /* 保证背景图片充满整个视口 */
+  margin: 0; /* 去除 body 默认的 margin */
+}
+</style>

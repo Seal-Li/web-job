@@ -17,8 +17,8 @@
       </el-form-item>
       <el-form-item label="用户类型" prop="userType" class="user-type-item">
         <el-select v-model="registerForm.userType" placeholder="请选择你的用户类型">
-          <el-option label="Customer" value="Customer"></el-option>
-          <el-option label="Dealer" value="Dealer"></el-option>
+          <el-option label="消费者" value="Customer"></el-option>
+          <el-option label="经销商" value="Dealer"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="电话" prop="phoneNumber">
@@ -30,7 +30,7 @@
     </el-form>
   </div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 
@@ -146,17 +146,25 @@ export default {
   }
 };
 </script>
-  
+
 <style scoped>
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: relative;
+  background: url('your-background-image-url.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
 }
 
 .register-form {
+  position: relative; /* 确保表单相对于父容器定位 */
+  z-index: 1; /* 将表单的 z-index 设为 1，使其位于背景图片上方 */
   width: 400px;
+  padding: 20px;
+  border: 1px solid #ebeef5; /* 边框样式，可以根据需要调整颜色和宽度 */
+  border-radius: 5px; /* 可选，添加圆角效果 */
+  background: rgba(255, 255, 255, 0.8); /* 背景颜色，可以根据需要调整透明度 */
 }
 
 .register-form .el-form-item {
@@ -164,6 +172,6 @@ export default {
 }
 
 .user-type-item .el-select {
-  width: 100%; /* 或者设置与其他输入框一致的具体宽度 */
+  width: 100%;
 }
 </style>

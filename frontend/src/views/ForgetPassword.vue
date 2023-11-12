@@ -136,13 +136,18 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: relative;
+  background: url('your-background-image-url.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
 }
 
 .form-container {
+  position: relative; /* 确保容器相对于父容器定位 */
+  z-index: 1; /* 将容器的 z-index 设为 1，使其位于背景图片上方 */
   width: 400px;
-  border: 1px solid #ebeef5;
+  border: 1px solid #ebeef5; /* 边框样式，可以根据需要调整颜色和宽度 */
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 5px; /* 可选，添加圆角效果 */
+  background: rgba(255, 255, 255, 0.8); /* 背景颜色，可以根据需要调整透明度 */
 }
 
 .el-form-item__label {
@@ -156,7 +161,7 @@ export default {
 .verification-code-btn {
   margin-left: 10px;
   background-color: #f5f7fa;
-  width: 120px;
+  width: 120px; /* 调整宽度，根据需要修改 */
 }
 
 .refresh-hint {
