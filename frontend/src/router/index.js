@@ -6,6 +6,7 @@ import {
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import ForgetPassword from '../views/ForgetPassword.vue';
+import Home from '../views/Home.vue'; 
 
 
 const routes = [
@@ -24,6 +25,12 @@ const routes = [
         name: 'ForgetPassword',
         component: ForgetPassword,
     },
+    {
+        path: '/home',
+        name: 'Home',
+        component: Home,
+        meta: { requiresAuth: true } // 如果首页需要登录才能访问，添加这个meta
+      },
 ]
 
 const router = createRouter({

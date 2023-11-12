@@ -102,9 +102,9 @@ export default {
       if (this.isLoginFormValid) {
         console.log('Login successful');
         // 导航到首页或执行其他操作
-        this.$router.push('/register');
+        this.$router.push('/home');
       } else {
-        console.error('Login failed. Please check your credentials.');
+        console.error('登录失败，账号或密码错误！');
       }
     }
   }

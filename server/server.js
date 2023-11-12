@@ -3,6 +3,8 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid');
 const config = require('./config/config.js'); // 引入配置文件
+const md5 = require('md5');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,18 +28,28 @@ app.post('/login', async (req, res) => {
 
   try {
     const connection = await pool.getConnection();
-    const selectUserQuery = 'SELECT * FROM users WHERE user_name = ?';
-    const [userResults] = await connection.execute(selectUserQuery, [username]);
+    const hashedPassword = md5(password); // 使用 md5 对密码进行加密
+    // 查询用户是否存在
+    const userExistsQuery = 'SELECT * FROM users WHERE email = ? OR telphone = ?';
+    const [userResults] = await connection.execute(userExistsQuery, [account, account]);
 
+    // 如果用户不存在，返回错误消息
     if (userResults.length === 0) {
       connection.release();
       return res.status(401).json({ success: false, message: '用户不存在' });
     }
 
     const user = userResults[0];
-    
-    // 使用bcrypt库比对密码
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    // 检查密码是否存在
+    if (!user.password) {
+      connection.release();
+      return res.status(401).json({ success: false, message: '用户密码不存在' });
+    }
+
+    // 使用 md5 比对密码
+    const isPasswordValid = hashedPassword === user.password;
+
 
     if (!isPasswordValid) {
       connection.release();
@@ -79,13 +91,17 @@ app.post('/register', async (req, res) => {
     // 生成用户ID
     const userId = uuidv4();
 
+    const hashedPassword = md5(password); // 使用 md5 对密码进行加密
+
     // 执行插入用户数据的SQL语句
     const insertUserQuery = `
       INSERT INTO users (user_id, user_name, password, email, telphone, user_type, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
     `;
 
-    await connection.execute(insertUserQuery, [userId, username, password, email, phoneNumber, userType]);
+    await connection.execute(insertUserQuery, [userId, username, hashedPassword, email, phoneNumber, userType]);
+
+    // await connection.execute(insertUserQuery, [userId, username, password, email, phoneNumber, userType]);
 
     await connection.commit();
     connection.release();
@@ -117,9 +133,11 @@ app.post('/reset-password', async (req, res) => {
       return res.status(400).json({ success: false, message: '用户不存在，请检查输入的账号' });
     }
 
+    const hashedNewPassword = md5(newPassword); // 使用 md5 对新密码进行加密
     // 执行更新密码的SQL语句
     const updatePasswordQuery = 'UPDATE users SET password = ? WHERE email = ? OR telphone = ?';
-    await connection.execute(updatePasswordQuery, [newPassword, account, account]);
+    await connection.execute(updatePasswordQuery, [hashedNewPassword, account, account]);
+
 
     await connection.commit();
     connection.release();
