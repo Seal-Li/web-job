@@ -4,25 +4,25 @@
   <div class="register-container">
     <el-form :model="registerForm" :rules="registerRules" label-width="120px" ref="registerForm" class="register-form">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="registerForm.username" placeholder="Enter your username" clearable></el-input>
+        <el-input v-model="registerForm.username" placeholder="请输入用户名" clearable></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="registerForm.password" type="password" placeholder="Enter your password" clearable></el-input>
+        <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" clearable></el-input>
       </el-form-item>
       <el-form-item label="再次输入密码" prop="confirmPassword">
-        <el-input v-model="registerForm.confirmPassword" type="password" placeholder="Confirm your password" clearable></el-input>
+        <el-input v-model="registerForm.confirmPassword" type="password" placeholder="再次输入密码" clearable></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="registerForm.email" placeholder="Enter your email" clearable></el-input>
+        <el-input v-model="registerForm.email" placeholder="请输入邮箱" clearable></el-input>
       </el-form-item>
       <el-form-item label="用户类型" prop="userType" class="user-type-item">
-        <el-select v-model="registerForm.userType" placeholder="Select User Type">
+        <el-select v-model="registerForm.userType" placeholder="请选择你的用户类型">
           <el-option label="Customer" value="Customer"></el-option>
           <el-option label="Dealer" value="Dealer"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="电话" prop="phoneNumber">
-        <el-input v-model="registerForm.phoneNumber" placeholder="Enter your phone number" clearable></el-input>
+        <el-input v-model="registerForm.phoneNumber" placeholder="请输入手机号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :disabled="!isRegisterFormValid" @click="register">注册</el-button>
@@ -38,18 +38,18 @@ export default {
   data() {
     return {
       registerForm: {
-        username: 'ZhangSan01',
-        password: 'Test1234!',
-        confirmPassword: 'Test1234!',
+        username: '',
+        password: '',
+        confirmPassword: '',
         userType: 'Customer', // 初始值为 "Customer"
-        email: 'example@163.com',
-        phoneNumber: '13456789000'
+        email: '',
+        phoneNumber: ''
       },
       registerRules: {
         username: [
           { 
               required: true, 
-              message: 'Please enter your username', 
+              message: '请输入用户名', 
               trigger: 'blur' 
           },
           { 
@@ -61,14 +61,18 @@ export default {
         password: [
           { 
               required: true, 
-              message: 'Please enter your password', 
+              message: '请输入你的密码', 
+              trigger: 'blur' 
+          },
+          { 
+              validator: this.validatePassword, 
               trigger: 'blur' 
           },
         ],
         confirmPassword: [
           { 
               required: true, 
-              message: 'Please confirm your password', 
+              message: '再次输入密码', 
               trigger: 'blur' 
           },
           { 
@@ -79,26 +83,26 @@ export default {
         email: [
           { 
               required: true, 
-              message: 'Please enter your email', 
+              message: '输入你的邮箱', 
               trigger: 'blur' 
           },
           { 
               type: 'email', 
-              message: 'Please enter a valid email address', 
+              message: '请输入有效的邮箱', 
               trigger: ['blur', 'change'] 
           }
         ],
         phoneNumber: [
           { 
               required: true, 
-              message: 'Please enter your phone number', 
+              message: '请输入你的手机号', 
               trigger: 'blur' 
           },
           { 
-        pattern: /^1((34[0-8])|(8\d{2})|(([35][0-35-9]|4[579]|66|7[35678]|9[1389])\d{1}))\d{7}$/, 
-        message: '请输入有效的手机号码', 
-        trigger: 'blur' 
-      }
+              pattern: /^1((34[0-8])|(8\d{2})|(([35][0-35-9]|4[579]|66|7[35678]|9[1389])\d{1}))\d{7}$/, 
+              message: '请输入有效的手机号码', 
+              trigger: 'blur' 
+          }
         ]
       }
     };
@@ -115,6 +119,11 @@ export default {
       } else {
         callback();
       }
+    },
+    validatePassword(rule, value, callback) {
+      // 密码规则验证逻辑
+      const isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/.test(value);
+      isValidPassword ? callback() : callback(new Error('密码必须同时包含大写字母、小写字母、数字和特殊符号，长度在6-16位之间'));
     },
     async register() {
       try {

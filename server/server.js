@@ -20,6 +20,42 @@ const pool = mysql.createPool({
 
 app.use(express.json());
 
+// 用户登录的路由
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const connection = await pool.getConnection();
+    const selectUserQuery = 'SELECT * FROM users WHERE user_name = ?';
+    const [userResults] = await connection.execute(selectUserQuery, [username]);
+
+    if (userResults.length === 0) {
+      connection.release();
+      return res.status(401).json({ success: false, message: '用户不存在' });
+    }
+
+    const user = userResults[0];
+    
+    // 使用bcrypt库比对密码
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      connection.release();
+      return res.status(401).json({ success: false, message: '密码错误' });
+    }
+
+    connection.release();
+    return res.status(200).json({ success: true, message: '登录成功' });
+  } catch (error) {
+    console.error('登录失败', error);
+    return res.status(500).json({ success: false, message: `登录失败: ${error.message || error}` });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 // 注册用户的路由
 app.post('/register', async (req, res) => {
   const { username, password, confirmPassword, email, userType, phoneNumber } = req.body;
