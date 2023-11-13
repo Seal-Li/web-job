@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- 上方导航栏 -->
     <div class="nav-bar">
-      <div class="welcome">欢迎用户{{ username }}！</div>
+      <div class="welcome">欢迎用户<br>{{ username }}！</div>
       <!-- 使用 router-link 实现导航 -->
       <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item" :data-route-name="item.routeName">
         {{ item.label }}

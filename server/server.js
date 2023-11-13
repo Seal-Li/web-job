@@ -204,6 +204,37 @@ app.get('/all-products', async (req, res) => {
 });
 
 
+// 添加搜索产品的路由
+app.get('/search-products', async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+    const { keyword } = req.query;
+
+    // 执行带有模糊查询的SQL语句
+    const query = `
+      SELECT * FROM products
+      WHERE product_name LIKE ? OR raw_material LIKE ? OR manufacturer LIKE ? OR product_desc LIKE ?
+    `;
+    const [products] = await connection.execute(query, [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`]);
+
+    // 获取总记录数，用于前端分页控制
+    const countQuery = `
+      SELECT COUNT(*) as count FROM products
+      WHERE product_name LIKE ? OR raw_material LIKE ? OR manufacturer LIKE ? OR product_desc LIKE ?
+    `;
+    const [countResult] = await connection.execute(countQuery, [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`]);
+    const totalProducts = countResult[0].count;
+
+    connection.release();
+
+    res.status(200).json({ success: true, products, totalProducts });
+  } catch (error) {
+    console.error('Error searching products', error);
+    res.status(500).json({ success: false, message: `搜索产品失败: ${error.message || error}` });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

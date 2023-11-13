@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- 上方导航栏 -->
     <div class="nav-bar">
-      <div class="welcome">欢迎！</div>
+      <div class="welcome">欢迎!</div>
       <!-- 使用 router-link 实现导航 -->
       <router-link
         v-for="item in navItems"
@@ -34,6 +34,11 @@
 
       <!-- 右侧内容区域 -->
       <div class="content">
+        <div class="search-bar">
+          <input v-model="searchKeyword" type="text" placeholder="输入关键字搜索">
+          <button @click="searchProducts">搜索</button>
+        </div>
+        <br>
         <table>
           <thead>
             <tr>
@@ -57,11 +62,11 @@
           </tbody>
         </table>
 
-        <!-- 分页控件 -->
-        <div class="pagination-container">
-          <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1">上一页</button>
-          <span>{{ currentPage }} / {{ totalPages }}</span>
-          <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
+        <!-- 分页控制按钮 -->
+        <div class="pagination">
+          <button :disabled="currentPage === 1" @click="prevPage" class="pagination-button">上一页</button>
+          <span>第 {{ currentPage }} 页 / 共 {{ totalPages }} 页</span>
+          <button :disabled="currentPage === totalPages" @click="nextPage" class="pagination-button">下一页</button>
         </div>
       </div>
     </div>
@@ -93,17 +98,17 @@ export default {
       currentPage: 1,
       perPage: 5,
       totalProducts: 0,
+      searchKeyword: '',
+      totalPages: 0,
     };
   },
   created() {
-    this.fetchAllProducts(); // 调用新的方法
+    this.fetchAllProducts();
   },
   methods: {
-    // 处理退出登录逻辑
     logout() {
       console.log('执行退出登录操作');
     },
-    // 新增方法，用于获取所有产品数据
     async fetchAllProducts() {
       try {
         const response = await axios.get('http://localhost:3000/all-products', {
@@ -112,25 +117,33 @@ export default {
             limit: this.perPage,
           },
         });
-        console.log("response:", response);
         this.products = response.data.products;
         this.totalProducts = response.data.totalProducts;
+        this.totalPages = Math.ceil(this.totalProducts / this.perPage);
       } catch (error) {
-        console.error('获取产品信息失败', error);
+        console.error('Error fetching all products', error);
       }
     },
-    // 上一页
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
         this.fetchAllProducts();
       }
     },
-    // 下一页
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
         this.fetchAllProducts();
+      }
+    },
+    async searchProducts() {
+      try {
+        const response = await this.$axios.get(`http://localhost:3000/search-products?keyword=${this.searchKeyword}`);
+        this.products = response.data.products;
+        this.totalProducts = response.data.totalProducts;
+        this.currentPage = 1;
+      } catch (error) {
+        console.error('搜索产品失败', error);
       }
     },
   },
@@ -139,9 +152,6 @@ export default {
       return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
         this.sideItems.slice(i * this.itemsPerRow, i * this.itemsPerRow + this.itemsPerRow)
       );
-    },
-    totalPages() {
-      return Math.ceil(this.totalProducts / this.perPage);
     },
   },
 };
@@ -175,7 +185,7 @@ export default {
 }
 
 .welcome {
-    /* width: 150px; */
+    width: 100px;
     margin-left: 20px;
     color: blue;
 }
@@ -240,7 +250,7 @@ th:nth-child(5), td:nth-child(5) { width: 120px; } /* 生产原料列宽度 */
 th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
 
 /* 分页控件样式 */
-.pagination-container {
+.pagination {
   display: flex;
   justify-content: center;
   align-items: center;
