@@ -199,7 +199,6 @@ app.get('/all-products', async (req, res) => {
     res.status(200).json({ success: true, products, totalProducts });
   } catch (error) {
     console.error('Error fetching all products', error);
-    console.error('Full error object:', error);
     res.status(500).json({ success: false, message: `获取所有产品失败: ${error.message || error}` });
   }
 });
