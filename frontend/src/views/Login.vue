@@ -29,8 +29,8 @@ export default {
   data() {
     return {
       loginForm: {
-        account: '',
-        password: '',
+        account: '15965825404',
+        password: 'Lhb123!',
         remember: false,
       },
       accountRules: [

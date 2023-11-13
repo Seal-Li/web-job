@@ -4,24 +4,33 @@
     <div class="nav-bar">
       <div class="welcome">欢迎用户{{ username }}！</div>
       <!-- 使用 router-link 实现导航 -->
-      <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item">
+      <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item" :data-route-name="item.routeName">
         {{ item.label }}
       </router-link>
       <div class="logout" @click="logout">退出登录</div>
     </div>
 
-    <!-- 左侧导航栏 -->
-    <div class="side-bar" :class="{ 'hide': isSideBarHidden }">
-      <div class="side-row" v-for="(row, index) in sideItemsInRows" :key="index">
-        <router-link v-for="item in row" :key="item.id" :to="{ name: item.routeName }" class="side-item">
-          {{ item.label }}
-        </router-link>
+    <!-- 下方区域 -->
+    <div class="main-container">
+      <!-- 左侧导航栏 -->
+      <div class="side-bar" :class="{ 'hide': isSideBarHidden }">
+        <div class="side-row" v-for="(row, index) in sideItemsInRows" :key="index">
+          <router-link v-for="item in row" :key="item.id" :to="{ name: item.routeName }" class="side-item">
+            {{ item.label }}
+          </router-link>
+        </div>
       </div>
-    </div>
 
-    <!-- 右侧内容区域 -->
-    <div class="content">
-      <router-view></router-view>
+      <!-- 右侧内容区域 -->
+      <div class="content">
+        <!-- 你想展示的独立于其他页面的信息 -->
+        <div>
+          <h2>欢迎来到首页</h2>
+          <p>这里是一些专属于首页的信息。</p>
+        </div>
+        <!-- 其他内容 ... -->
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -65,63 +74,5 @@ export default {
 </script>
 
 <style scoped>
-.home-container {
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-  background: none !important;
-}
-
-.bg-transparent {
-  background: rgba(255, 255, 255, 0.8); 
-  padding: 20px; 
-}
-
-.nav-bar {
-  background-color: #784d42;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  color: #fff;
-}
-
-.nav-item, .side-item {
-  padding: 8px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  font-weight: bold; /* 加粗字体 */
-  text-decoration: none; /* 取消下划线 */
-  color: #fff; /* 字体颜色 */
-}
-
-.welcome {
-  /* width: 150px; */
-  margin-left: 20px;
-  color: blue;
-}
-
-.logout {
-  cursor: pointer;
-  color: blue;
-  margin-right: 20px;
-}
-
-.side-bar {
-  width: 150px; /* 左侧导航栏的宽度 */
-  height: calc(100vh + 44px); /* 高度为视口高度减去导航栏的高度 */
-  overflow-y: auto;
-  background-color: #784d42; /* 左侧导航栏的背景颜色 */
-  padding-top:30px;
-  padding-left: 30px;
-  transition: width 0.3s;
-}
-
-.hide {
-  width: 0;
-}
-
-.side-row {
-  margin-bottom: 30px; /* 1.5倍行间距 */
-}
+@import "../css/Home.css";
 </style>
