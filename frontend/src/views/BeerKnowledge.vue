@@ -61,28 +61,6 @@ export default {
       // 处理退出登录逻辑
       console.log('执行退出登录操作');
     },
-    updateNavStyles() {
-      // 获取当前路由的名称
-      const currentRoute = this.$route.name;
-
-      // 遍历导航项，根据当前路由更新导航栏样式
-      this.navItems.forEach((item) => {
-        // 判断当前导航项是否是激活状态
-        const isActive = item.routeName === currentRoute;
-
-        // 更新导航项的样式
-        const navItem = document.querySelector(`.nav-item[data-route-name="${item.routeName}"]`);
-        if (navItem) {
-          navItem.classList.toggle('active', isActive);
-        }
-      });
-
-      // 清除其他导航项的激活状态
-      const inactiveNavItems = document.querySelectorAll('.nav-item:not(.active)');
-      inactiveNavItems.forEach((item) => {
-        item.classList.remove('active');
-      });
-    },
   },
   computed: {
     sideItemsInRows() {
