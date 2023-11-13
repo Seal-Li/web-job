@@ -56,13 +56,21 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container">
+          <button class="pagination-button" @click="prevPage" :disabled="currentPage === 1">上一页</button>
+          <span>{{ currentPage }} / {{ totalPages }}</span>
+          <button class="pagination-button" @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axio from 'axios';
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -82,6 +90,9 @@ export default {
         { id: 3, label: '我的收藏', routeName: 'myFavorites' },
         { id: 4, label: '我的地址', routeName: 'myAddresses' },
       ],
+      currentPage: 1,
+      perPage: 5,
+      totalProducts: 0,
     };
   },
   created() {
@@ -95,11 +106,31 @@ export default {
     // 新增方法，用于获取所有产品数据
     async fetchAllProducts() {
       try {
-        const response = await this.$axios.get('http://localhost:3000/all-products');
+        const response = await axios.get('http://localhost:3000/all-products', {
+          params: {
+            page: this.currentPage,
+            limit: this.perPage,
+          },
+        });
         console.log("response:", response);
         this.products = response.data.products;
+        this.totalProducts = response.data.totalProducts;
       } catch (error) {
         console.error('获取产品信息失败', error);
+      }
+    },
+    // 上一页
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchAllProducts();
+      }
+    },
+    // 下一页
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.fetchAllProducts();
       }
     },
   },
@@ -108,6 +139,9 @@ export default {
       return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
         this.sideItems.slice(i * this.itemsPerRow, i * this.itemsPerRow + this.itemsPerRow)
       );
+    },
+    totalPages() {
+      return Math.ceil(this.totalProducts / this.perPage);
     },
   },
 };
@@ -182,19 +216,39 @@ export default {
 }
 
 table {
-    width: 100%; /* 表格充满整个容器宽度 */
-    border-collapse: collapse; /* 合并边框，使其更紧凑 */
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th, td {
-    border: 1px solid #ddd; /* 添加边框 */
-    padding: 8px; /* 单元格内边距 */
-    text-align: left; /* 文字左对齐 */
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd; /* 添加边框 */
 }
 
 th {
     font-weight: bold; /* 表头文字加粗显示 */
     background-color: #f2f2f2; /* 表头背景颜色 */
+}
+
+/* 设置每列的固定宽度 */
+th:nth-child(1), td:nth-child(1) { width: 40px; } /* 产品ID列宽度 */
+th:nth-child(2), td:nth-child(2) { width: 150px; } /* 产品名称列宽度 */
+th:nth-child(3), td:nth-child(3) { width: 80px; } /* 价格列宽度 */
+th:nth-child(4), td:nth-child(4) { width: 120px; } /* 制造商列宽度 */
+th:nth-child(5), td:nth-child(5) { width: 120px; } /* 生产原料列宽度 */
+th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
+
+/* 分页控件样式 */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px; /* 调整上下间距 */
+}
+
+.pagination-button {
+  margin: 0 10px; /* 调整按钮间距 */
 }
 
 </style>
