@@ -173,6 +173,25 @@ app.post('/check-account-existence', async (req, res) => {
 });
 
 
+// 添加获取所有产品的路由
+app.get('/all-products', async (req, res) => {
+  try {
+    const connection = await pool.getConnection();
+
+    // 执行查询所有产品的SQL语句
+    const query = 'SELECT * FROM products';
+    const [products] = await connection.execute(query);
+
+    connection.release();
+
+    res.status(200).json({ success: true, products });
+  } catch (error) {
+    console.error('Error fetching all products', error);
+    res.status(500).json({ success: false, message: `获取所有产品失败: ${error.message || error}` });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
