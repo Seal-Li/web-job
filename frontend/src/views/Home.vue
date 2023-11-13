@@ -56,7 +56,6 @@ export default {
   },
   computed: {
     sideItemsInRows() {
-      // 使用slice方法将sideItems切分成每行itemsPerRow个元素的二维数组
       return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
         this.sideItems.slice(i * this.itemsPerRow, i * this.itemsPerRow + this.itemsPerRow)
       );
@@ -70,12 +69,12 @@ export default {
   padding: 0px;
   display: flex;
   flex-direction: column;
-  background: url('../assets/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: none !important;
 }
 
 .bg-transparent {
-  background: rgba(255, 255, 255, 0.8); /* 设置背景图片透明度，可以根据需要调整值 */
-  padding: 20px; /* 为了演示，你可能需要调整其他容器样式 */
+  background: rgba(255, 255, 255, 0.8); 
+  padding: 20px; 
 }
 
 .nav-bar {
@@ -87,15 +86,25 @@ export default {
   color: #fff;
 }
 
-/* .nav-item, */
+.nav-item, .side-item {
+  padding: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  font-weight: bold; /* 加粗字体 */
+  text-decoration: none; /* 取消下划线 */
+  color: #fff; /* 字体颜色 */
+}
+
 .welcome {
   /* width: 150px; */
-  margin-right: 10px;
-  color:blue;
+  margin-left: 20px;
+  color: blue;
 }
+
 .logout {
   cursor: pointer;
-  color:blue;
+  color: blue;
+  margin-right: 20px;
 }
 
 .side-bar {
@@ -103,7 +112,8 @@ export default {
   height: calc(100vh + 44px); /* 高度为视口高度减去导航栏的高度 */
   overflow-y: auto;
   background-color: #784d42; /* 左侧导航栏的背景颜色 */
-  padding: 10px;
+  padding-top:30px;
+  padding-left: 30px;
   transition: width 0.3s;
 }
 
@@ -111,15 +121,7 @@ export default {
   width: 0;
 }
 
-.side-item {
-  padding: 8px;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-
-.content {
-  flex-grow: 1;
-  padding: 10px;
-  overflow-y: auto;
+.side-row {
+  margin-bottom: 30px; /* 1.5倍行间距 */
 }
 </style>

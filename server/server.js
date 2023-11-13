@@ -24,8 +24,8 @@ app.use(express.json());
 
 // 用户登录的路由
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
+  const { account, password } = req.body;
+  
   try {
     const connection = await pool.getConnection();
     const hashedPassword = md5(password); // 使用 md5 对密码进行加密
@@ -68,6 +68,7 @@ app.post('/login', async (req, res) => {
 // 注册用户的路由
 app.post('/register', async (req, res) => {
   const { username, password, confirmPassword, email, userType, phoneNumber } = req.body;
+  console.log("userid has genereate")
   console.log(req.body);
   try {
     const connection = await pool.getConnection();
@@ -135,7 +136,7 @@ app.post('/reset-password', async (req, res) => {
 
     const hashedNewPassword = md5(newPassword); // 使用 md5 对新密码进行加密
     // 执行更新密码的SQL语句
-    const updatePasswordQuery = 'UPDATE users SET password = ? WHERE email = ? OR telphone = ?';
+    const updatePasswordQuery = 'UPDATE users SET password = ?, updated_at = NOW() WHERE email = ? OR telphone = ?';
     await connection.execute(updatePasswordQuery, [hashedNewPassword, account, account]);
 
 

@@ -4,8 +4,8 @@
   <div class="login-container">
     <el-card class="login-card" shadow="hover">
       <el-form :model="loginForm" label-width="80px" ref="loginForm" class="login-form">
-        <el-form-item label="用户名" prop="username" :rules="usernameRules">
-          <el-input v-model="loginForm.username" placeholder="请输入账号" clearable></el-input>
+        <el-form-item label="用户名" prop="account" :rules="accountRules">
+          <el-input v-model="loginForm.account" placeholder="请输入账号" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" :rules="passwordRules">
           <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable></el-input>
@@ -24,15 +24,16 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
       loginForm: {
-        username: '',
+        account: '',
         password: '',
         remember: false,
       },
-      usernameRules: [
+      accountRules: [
         { 
           required: true, 
           message: '请输入账号', 
@@ -66,7 +67,7 @@ export default {
   },
   computed: {
     isLoginFormValid() {
-      return this.loginForm.username.trim() !== '' && this.loginForm.password.trim() !== '';
+      return this.loginForm.account.trim() !== '' && this.loginForm.password.trim() !== '';
     }
   },
   watch: {
@@ -75,11 +76,11 @@ export default {
         // 如果勾选了记住密码，则将密码保存到本地存储
         if (newValue) {
           localStorage.setItem('rememberedPassword', this.loginForm.password);
-          localStorage.setItem('rememberedUsername', this.loginForm.username);
+          localStorage.setItem('rememberedAccount', this.loginForm.account);
         } else {
           // 如果取消勾选记住密码，则清除本地存储的密码
           localStorage.removeItem('rememberedPassword');
-          localStorage.removeItem('rememberedUsername');
+          localStorage.removeItem('rememberedAccount');
         }
       },
       immediate: true // 立即触发，以便在组件加载时执行
@@ -88,25 +89,36 @@ export default {
   created() {
     // 在组件创建时，尝试从本地存储中获取记住的密码
     const rememberedPassword = localStorage.getItem('rememberedPassword');
-    const rememberedUsername = localStorage.getItem('rememberedUsername');
+    const rememberedAccount = localStorage.getItem('rememberedAccount');
 
-    if (rememberedPassword && rememberedUsername) {
+    if (rememberedPassword && rememberedAccount) {
       this.loginForm.password = rememberedPassword;
-      this.loginForm.username = rememberedUsername;
+      this.loginForm.account = rememberedAccount;
       this.loginForm.remember = true;
     }
   },
   methods: {
     login() {
       // 执行登录逻辑
+      console.log('登录');
       if (this.isLoginFormValid) {
-        console.log('Login successful');
-        // 导航到首页或执行其他操作
-        this.$router.push('/home');
+        axios.post('http://localhost:3000/login', {
+          account: this.loginForm.account,
+          password: this.loginForm.password
+        })
+        .then(response => {
+          console.log('登录成功', response.data);
+          // 导航到首页或执行其他操作
+          this.$router.push('/home');
+        })
+        .catch(error => {
+          console.error('登录失败，账号或密码错误！', error);
+        });
       } else {
         console.error('登录失败，账号或密码错误！');
       }
     }
+
   }
 };
 </script>
