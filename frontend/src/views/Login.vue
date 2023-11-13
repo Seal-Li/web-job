@@ -5,7 +5,7 @@
     <el-card class="login-card" shadow="hover">
       <el-form :model="loginForm" label-width="80px" ref="loginForm" class="login-form">
         <el-form-item label="用户名" prop="account" :rules="accountRules">
-          <el-input v-model="loginForm.account" placeholder="请输入账号" clearable></el-input>
+          <el-input v-model="loginForm.account" placeholder="请输入注册手机号或邮箱" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" :rules="passwordRules">
           <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable></el-input>
@@ -36,11 +36,11 @@ export default {
       accountRules: [
         { 
           required: true, 
-          message: '请输入账号', 
+          message: '请输入注册邮箱或手机号', 
           trigger: 'blur' 
         },
         { 
-          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,12}$/, 
+          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,16}$/, 
           message: '只能使用英文字符和数字', 
           trigger: 'blur' 
         }
@@ -54,7 +54,7 @@ export default {
         { 
           min: 6, 
           max: 16, 
-          message: 'Password length must be between 6 and 16 characters', 
+          message: '密码长度必须是6-16位', 
           trigger: 'blur' 
         },
         { 
