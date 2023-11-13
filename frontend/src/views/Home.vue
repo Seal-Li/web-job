@@ -1,98 +1,125 @@
 <template>
-    <div class="home-container">
-      <!-- 上导航栏 -->
-      <el-row class="nav-bar">
-        <el-col :span="18">
-          <el-menu mode="horizontal" @select="handleNavMenuSelect" background-color="#67C23A" text-color="#fff" active-text-color="#ffd04b">
-            <el-menu-item index="1">推荐</el-menu-item>
-            <el-menu-item index="2">热门</el-menu-item>
-            <el-menu-item index="3">啤酒品类</el-menu-item>
-            <el-menu-item index="4">啤酒课堂</el-menu-item>
-            <el-menu-item index="5">我要哈啤酒</el-menu-item>
-            <el-menu-item index="6">论坛</el-menu-item>
-          </el-menu>
-        </el-col>
-        <el-col :span="6">
-          <!-- 左侧导航栏的宽度减小一半 -->
-          <div class="welcome">欢迎{{ username }}！</div>
-          <!-- 右上方退出登录按钮 -->
-          <el-button @click="logout" type="text" class="logout-button">退出登录</el-button>
-        </el-col>
-      </el-row>
-  
-      <!-- 左侧导航栏 -->
-      <el-row class="side-bar">
-        <el-col :span="3">
-          <el-menu :default-active="activeMenu" class="el-menu-vertical-demo" @select="handleSideMenuSelect" background-color="#f5f5f5" text-color="#333" active-text-color="#67C23A">
-            <el-submenu index="personal">
-              <template slot="title">个人中心</template>
-              <el-menu-item index="personal-info">基础信息</el-menu-item>
-              <!-- 在这里添加其他个人中心的子菜单项 -->
-            </el-submenu>
-            <el-menu-item index="wallet">我的钱包</el-menu-item>
-            <el-menu-item index="creations">我的创作</el-menu-item>
-            <el-menu-item index="orders">我的订单</el-menu-item>
-            <el-menu-item index="statistics">收支统计</el-menu-item>
-            <el-menu-item index="feedback">我要反馈</el-menu-item>
-          </el-menu>
-        </el-col>
-        <el-col :span="15">
-          <!-- 右侧内容区域，根据左侧导航栏选项展示不同内容 -->
-          <router-view></router-view>
-        </el-col>
-      </el-row>
+  <div class="home-container">
+    <!-- 上方导航栏 -->
+    <div class="nav-bar">
+      <div class="welcome">欢迎用户{{ username }}！</div>
+      <!-- 使用 router-link 实现导航 -->
+      <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item">
+        {{ item.label }}
+      </router-link>
+      <div class="logout" @click="logout">退出登录</div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        username: '用户1', // 替换为实际的用户名
-        activeMenu: 'personal-info', // 默认选中的左侧导航栏项
-      };
+
+    <!-- 左侧导航栏 -->
+    <div class="side-bar" :class="{ 'hide': isSideBarHidden }">
+      <div class="side-row" v-for="(row, index) in sideItemsInRows" :key="index">
+        <router-link v-for="item in row" :key="item.id" :to="{ name: item.routeName }" class="side-item">
+          {{ item.label }}
+        </router-link>
+      </div>
+    </div>
+
+    <!-- 右侧内容区域 -->
+    <div class="content">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      itemsPerRow: 1,
+      username: '用户1', // 替换为实际的用户名
+      isSideBarHidden: false,
+      navItems: [
+        { id: 1, label: '推荐', routeName: 'recommend' },
+        { id: 2, label: '热销', routeName: 'hot' },
+        { id: 3, label: '啤酒品类', routeName: 'beerCategory' },
+        { id: 4, label: '啤酒知识', routeName: 'beerKnowledge' },
+        { id: 5, label: '论坛', routeName: 'forum' },
+      ],
+      sideItems: [
+        { id: 1, label: '用户中心', routeName: 'userCenter' },
+        { id: 2, label: '我的订单', routeName: 'myOrders' },
+        { id: 3, label: '我的收藏', routeName: 'myFavorites' },
+        { id: 4, label: '我的地址', routeName: 'myAddresses' },
+      ],
+    };
+  },
+  methods: {
+    logout() {
+      // 处理退出登录逻辑
+      console.log('执行退出登录操作');
     },
-    methods: {
-      handleNavMenuSelect(index) {
-        // 处理上导航栏菜单点击事件
-        console.log('点击上导航栏菜单:', index);
-      },
-      handleSideMenuSelect(index) {
-        // 处理左侧导航栏菜单点击事件
-        console.log('点击左侧导航栏菜单:', index);
-        this.activeMenu = index; // 更新当前选中项
-      },
-      logout() {
-        // 处理退出登录逻辑
-        console.log('执行退出登录操作');
-      },
+  },
+  computed: {
+    sideItemsInRows() {
+      // 使用slice方法将sideItems切分成每行itemsPerRow个元素的二维数组
+      return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
+        this.sideItems.slice(i * this.itemsPerRow, i * this.itemsPerRow + this.itemsPerRow)
+      );
     },
-  };
-  </script>
-  
-  <style scoped>
-  .home-container {
-    padding: 0px;
-  }
-  
-  .nav-bar {
-    background-color: #fff; /* 上导航栏背景色 */
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1); /* 上导航栏阴影效果 */
-  }
-  
-  .logout-button {
-    color: #67C23A; /* 退出登录按钮文字颜色 */
-  }
-  
-  .side-bar {
-    height: calc(100vh - 40px); /* 左侧导航栏高度 */
-    overflow-y: auto; /* 左侧导航栏超出高度时出现滚动条 */
-  }
-  
-  .welcome {
-    padding: 0px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+.home-container {
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  background: url('../assets/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+}
+
+.bg-transparent {
+  background: rgba(255, 255, 255, 0.8); /* 设置背景图片透明度，可以根据需要调整值 */
+  padding: 20px; /* 为了演示，你可能需要调整其他容器样式 */
+}
+
+.nav-bar {
+  background-color: #784d42;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  color: #fff;
+}
+
+/* .nav-item, */
+.welcome {
+  /* width: 150px; */
+  margin-right: 10px;
+  color:blue;
+}
+.logout {
+  cursor: pointer;
+  color:blue;
+}
+
+.side-bar {
+  width: 150px; /* 左侧导航栏的宽度 */
+  height: calc(100vh + 44px); /* 高度为视口高度减去导航栏的高度 */
+  overflow-y: auto;
+  background-color: #784d42; /* 左侧导航栏的背景颜色 */
+  padding: 10px;
+  transition: width 0.3s;
+}
+
+.hide {
+  width: 0;
+}
+
+.side-item {
+  padding: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+</style>

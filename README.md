@@ -85,10 +85,6 @@ CREATE TABLE Admins (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-INSERT INTO Admins (admin_id, admin_name, password, email, telphone, is_super_admin)
-VALUES
-('1', 'admin1', 'password1', 'admin1@example.com', '13456789000', TRUE);
 ```
 
 #### 用户&供应商数据表设计
@@ -115,10 +111,6 @@ CREATE TABLE Users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-INSERT INTO Users (user_id, user_name, password, email, telphone, user_type, money)
-VALUES
-('user1', 'customer1', 'password1', 'customer1@example.com', '13456789000', 'Customer', 10.00);
 ```
 
 #### 产品信息表
@@ -144,14 +136,6 @@ CREATE TABLE Products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-INSERT INTO Products (product_name, product_price, manufacturer, raw_materials, product_description)
-VALUES
-('Product1', 29.99, 'Manufacturer1', 'Material1, Material2', 'This is the description of Product1.'),
-('Product2', 49.99, 'Manufacturer2', 'Material3, Material4', 'This is the description of Product2.'),
-('Product3', 99.99, 'Manufacturer3', 'Material5, Material6', 'This is the description of Product3.'),
-('Product4', 79.99, 'Manufacturer4', 'Material7, Material8', 'This is the description of Product4.'),
-('Product5', 39.99, 'Manufacturer5', 'Material9, Material10', 'This is the description of Product5.');
 ```
 
 ### 项目结构
@@ -171,12 +155,27 @@ VALUES
 则随机生成一个验证码让用户输入，如果验证码也输入正确，则提示修改密码成功，否则提示错误信息。
 - 密码修改成功后，将新密码进行md5加密存储到数据库，并跳转到登陆页面。
 
-#### 登陆成功后，跳转到首页
+#### 登陆成功后，跳转到首页(Home)
 - 首页左上角设置提示信息：“欢迎用户{用户名}登录”；
 - 右上角设置提示信息：“退出登录”，并且点击退出按钮后，跳转到登录页面；
 - 首页需要显示用户名、余额、购物车商品数量、商品列表。
 - 设置导航栏，点击导航栏中的推荐、新品、热销、特价，跳转到对应的商品列表页面。
 - 左侧导航栏设置用户中心、购物车、我的订单、我的收藏、我的地址、我的评论。
+
+做一个Home.vue页面，要满足以下要求：
+首页设置上方导航栏：从左到右依次为推荐、热销、啤酒品类、啤酒知识、论坛，欢迎信息和退出登录按钮。
+设置左侧导航栏：从上到下依次为用户中心、我的订单、我的收藏、我的地址；需要左侧导航栏可点击后进行隐藏/显示。
+上方导航栏背景颜色设置为绿色，几个模块平均占用上方导航栏的空间进行显示
+欢迎信息显示为：欢迎用户{用户名}
+
+
+
+
+
+
+
+
+
 
 #### 管理员登录
 - 管理员登录页面，需要输入管理员账号和密码，如果输入正确，则跳转到管理员页面，否则提示错误信息。
