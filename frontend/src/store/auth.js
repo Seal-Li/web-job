@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 // console.log('useUserStore defined');
 export const useUserStore = defineStore('user', {
   state: () => ({
+    userid: '',
     username: '',
     email: '',
     telphone: '',
@@ -10,6 +11,9 @@ export const useUserStore = defineStore('user', {
     money: ''    
   }),
   actions: {
+    setUserid(newUserid) {
+      this.userid = newUserid;
+    },
     setUsername(newUsername) {
       this.username = newUsername;
     },

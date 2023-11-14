@@ -52,7 +52,12 @@ export default {
     const userStore = useUserStore();
 
     // 获取用户名
+    const userid = computed(() => userStore.userid);
     const username = computed(() => userStore.username);
+    const email = computed(() => userStore.email);
+    const telphone = computed(() => userStore.telphone);
+    const usertype = computed(() => userStore.usertype);
+    const money = computed(() => userStore.money);
 
     // 在用户信息更新时自动更新用户名
     watchEffect(() => {
@@ -61,7 +66,12 @@ export default {
     });
 
     return {
+      userid,
       username,
+      email,
+      telphone,
+      usertype,
+      money,
       // 其他返回的数据
     };
   },

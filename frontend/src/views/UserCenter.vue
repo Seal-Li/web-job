@@ -4,7 +4,13 @@
     <div class="nav-bar">
       <div class="welcome">欢迎用户<br>{{ username }}！</div>
       <!-- 使用 router-link 实现导航 -->
-      <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item" :data-route-name="item.routeName">
+      <router-link
+        v-for="item in navItems"
+        :key="item.id"
+        :to="{ name: item.routeName }"
+        class="nav-item"
+        :data-route-name="item.routeName"
+      >
         {{ item.label }}
       </router-link>
       <div class="logout" @click="logout">退出登录</div>
@@ -13,7 +19,7 @@
     <!-- 下方区域 -->
     <div class="main-container">
       <!-- 左侧导航栏 -->
-      <div class="side-bar" :class="{ 'hide': isSideBarHidden }">
+      <div class="side-bar" :class="{ hide: isSideBarHidden }">
         <div class="side-row" v-for="(row, index) in sideItemsInRows" :key="index">
           <router-link v-for="item in row" :key="item.id" :to="{ name: item.routeName }" class="side-item">
             {{ item.label }}
@@ -26,25 +32,29 @@
         <!-- 展示用户信息的容器 -->
         <div class="user-info-container">
           <div>
+            <button class="edit-button" @click="saveInfo">
+              {{ isEditing ? '保存信息' : '编辑信息' }}
+            </button>
+          </div>
+          <div>
             <span class="info-label">用户名：</span>
             <span v-if="!isEditing" class="info-text">{{ username }}</span>
-            <input v-if="isEditing" v-model="editedUsername" />
-            <span class="edit-button" @click="toggleEditing">{{ isEditing ? '保存' : '编辑' }}</span>
+            <input v-if="isEditing" v-model="editedUsername" :readonly="!isEditing" />
           </div>
           <div>
             <span class="info-label">绑定手机号：</span>
             <span v-if="!isEditing" class="info-text">{{ telphone }}</span>
-            <input v-if="isEditing" v-model="editedTelphone" />
+            <input v-if="isEditing" v-model="editedTelphone" :readonly="!isEditing" />
           </div>
           <div>
             <span class="info-label">绑定邮箱：</span>
             <span v-if="!isEditing" class="info-text">{{ email }}</span>
-            <input v-if="isEditing" v-model="editedEmail" />
+            <input v-if="isEditing" v-model="editedEmail" :readonly="!isEditing" />
           </div>
           <div>
             <span class="info-label">用户类型：</span>
             <span v-if="!isEditing" class="info-text">{{ usertype }}</span>
-            <input v-if="isEditing" v-model="editedUsertype" />
+            <input v-if="isEditing" v-model="editedUsertype" :readonly="!isEditing" />
           </div>
         </div>
 
@@ -56,6 +66,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { useUserStore } from '@/store/auth';
 import { computed, watchEffect, ref } from 'vue';
 
@@ -68,16 +79,15 @@ export default {
     const email = computed(() => userStore.email);
     const telphone = computed(() => userStore.telphone);
     const usertype = computed(() => userStore.usertype);
-    const money = computed(() => userStore.money);
 
     // 编辑状态
     const isEditing = ref(false);
 
     // 编辑时的临时变量
-    const editedUsername = ref('');
-    const editedTelphone = ref('');
-    const editedEmail = ref('');
-    const editedUsertype = ref('');
+    const editedUsername = ref(username.value);
+    const editedTelphone = ref(telphone.value);
+    const editedEmail = ref(email.value);
+    const editedUsertype = ref(usertype.value);
 
     // 在用户信息更新时自动更新用户名
     watchEffect(() => {
@@ -85,24 +95,57 @@ export default {
       // 这里可以执行一些其他的逻辑
     });
 
-    // 切换编辑状态
-    const toggleEditing = () => {
+    // 保存信息到后端数据库
+    const saveInfo = async () => {
       if (isEditing.value) {
-        // 保存编辑后的信息
-        userStore.setUsername(editedUsername.value);
-        userStore.setTelphone(editedTelphone.value);
-        userStore.setEmail(editedEmail.value);
-        userStore.setUsertype(editedUsertype.value);
+        // 处于编辑模式，保存信息到后端数据库
+        try {
+          let response = await axios.post('http://localhost:3000/update-user-info', {
+            userid: userStore.userid,
+            username: editedUsername.value,
+            telphone: editedTelphone.value,
+            email: editedEmail.value,
+            usertype: editedUsertype.value,
+          });
+          if (response.data.success) {
+            // 保存成功，更新本地存储
+            userStore.setUsername(editedUsername.value);
+            userStore.setTelphone(editedTelphone.value);
+            userStore.setEmail(editedEmail.value);
+            userStore.setUsertype(editedUsertype.value);
+          } else {
+            console.error('保存信息失败');
+          }
+        } catch (error) {
+          console.error('保存信息失败', error);
+        }
+
+        // 退出编辑模式
+        isEditing.value = false;
       } else {
-        // 进入编辑状态时，将编辑前的信息保存到临时变量中
+        // 不处于编辑模式，切换到编辑模式
+        // 将编辑前的信息保存到临时变量中
         editedUsername.value = username.value;
         editedTelphone.value = telphone.value;
         editedEmail.value = email.value;
         editedUsertype.value = usertype.value;
-      }
 
-      // 切换编辑状态
+        // 切换编辑状态
+        isEditing.value = true;
+      }
+    };
+
+    // 切换编辑状态的方法
+    const toggleEditing = () => {
       isEditing.value = !isEditing.value;
+    };
+
+    // 退出登录
+    const logout = () => {
+      // 处理退出登录逻辑
+      console.log('执行退出登录操作');
+      // 导航到登录页面并替换当前路由历史
+      this.$router.push('/');
     };
 
     return {
@@ -115,7 +158,9 @@ export default {
       editedTelphone,
       editedEmail,
       editedUsertype,
+      saveInfo,
       toggleEditing,
+      logout,
     };
   },
   data() {
@@ -139,14 +184,6 @@ export default {
       ],
     };
   },
-  methods: {
-    logout() {
-      // 处理退出登录逻辑
-      console.log('执行退出登录操作');
-      // 导航到登录页面并替换当前路由历史
-      this.$router.push('/');
-    },
-  },
   computed: {
     sideItemsInRows() {
       return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
@@ -167,16 +204,16 @@ export default {
   width: 60%;
   text-align: left;
   font-size: 18px;
-  line-height: 4; /* 行高 */
+  line-height: 1.5; /* 调整行高 */
 }
 
 .info-label {
   font-weight: bold;
-  margin-bottom: 8px; /* 文本和标签之间的距离 */
+  margin-bottom: 8px;
 }
 
 .info-text {
-  margin-bottom: 15px; /* 文本与编辑按钮之间的距离 */
+  margin-bottom: 15px;
 }
 
 .edit-button {

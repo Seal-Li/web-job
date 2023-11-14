@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-card class="login-card" shadow="hover">
       <el-form :model="loginForm" label-width="80px" ref="loginData" class="login-form">
-        <el-form-item label="用户名" prop="account" :rules="rules.accountRules">
+        <el-form-item label="账号" prop="account" :rules="rules.accountRules">
           <el-input v-model="loginForm.account" placeholder="请输入注册手机号或邮箱" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" :rules="rules.passwordRules">
@@ -98,6 +98,7 @@ export default defineComponent({
         });
 
         // 更新用户信息
+        userStore.setUserid(response.data.user.user_id);
         userStore.setUsername(response.data.user.user_name);
         userStore.setEmail(response.data.user.email);
         userStore.setTelphone(response.data.user.telphone);
@@ -106,9 +107,11 @@ export default defineComponent({
 
         // 如果勾选了记住密码，保存用户名到 localStorage
         if (loginForm.remember) {
-          localStorage.setItem('username', loginForm.account);
+          localStorage.setItem('account', loginForm.account);
+          localStorage.setItem('password', loginForm.password);
         } else {
-          localStorage.removeItem('username');
+          localStorage.removeItem('account');
+          localStorage.setItem('password', loginForm.password);
         }
 
         // 导航到首页或执行其他操作
