@@ -34,8 +34,11 @@
 
       <!-- 右侧内容区域 -->
       <div class="content">
+        <!-- 在搜索框旁边添加价格范围搜索框 -->
         <div class="search-bar">
           <input v-model="searchKeyword" type="text" placeholder="输入关键字搜索">
+          <input v-model.number="minPrice" type="number" placeholder="最低价格">
+          <input v-model.number="maxPrice" type="number" placeholder="最高价格">
           <button @click="searchProducts">搜索</button>
         </div>
         <br>
@@ -83,6 +86,7 @@ export default {
       isSideBarHidden: false,
       products: [],
       navItems: [
+        { id: 0, label: '首页', routeName: 'Home' },
         { id: 1, label: '推荐', routeName: 'recommend' },
         { id: 2, label: '热销', routeName: 'hot' },
         { id: 3, label: '啤酒品类', routeName: 'beerCategory' },
@@ -100,6 +104,8 @@ export default {
       totalProducts: 0,
       searchKeyword: '',
       totalPages: 0,
+      minPrice: null,
+      maxPrice: null,
     };
   },
   created() {
@@ -138,10 +144,19 @@ export default {
     },
     async searchProducts() {
       try {
-        const response = await this.$axios.get(`http://localhost:3000/search-products?keyword=${this.searchKeyword}`);
+        const params = {
+          keyword: this.searchKeyword,
+          minPrice: this.minPrice,
+          maxPrice: this.maxPrice,
+        };
+
+        const response = await this.$axios.get('http://localhost:3000/search-products', { params });
+        // 输出响应数据，检查是否有返回数据
+        console.log(response.data);
+
         this.products = response.data.products;
         this.totalProducts = response.data.totalProducts;
-        this.currentPage = 1;
+        this.currentPage = 1; // 重置当前页为第一页
       } catch (error) {
         console.error('搜索产品失败', error);
       }

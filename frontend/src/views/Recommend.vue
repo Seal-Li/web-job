@@ -42,6 +42,7 @@ export default {
       username: '用户1', // 替换为实际的用户名
       isSideBarHidden: false,
       navItems: [
+        { id: 0, label: '首页', routeName: 'Home' },
         { id: 1, label: '推荐', routeName: 'recommend' },
         { id: 2, label: '热销', routeName: 'hot' },
         { id: 3, label: '啤酒品类', routeName: 'beerCategory' },

@@ -52,6 +52,7 @@ export default {
       username: '用户1', // 替换为实际的用户名
       isSideBarHidden: false,
       navItems: [
+        { id: 0, label: '首页', routeName: 'Home' },
         { id: 1, label: '推荐', routeName: 'recommend' },
         { id: 2, label: '热销', routeName: 'hot' },
         { id: 3, label: '啤酒品类', routeName: 'beerCategory' },
@@ -84,11 +85,9 @@ export default {
           name: '百年之旅',
           image: new URL('@/static/bainian.png', import.meta.url).href,
           description: `
-            总体印象:款有着微微焦糖、烤面包香气，有一定苦度。相当高的发酵程度。
-            香气: 麦芽香气较为明显，带有微微的焦甜、焦香香气。 较淡的酒花味道，包括柔和的花香。
-            外观: 琥珀色，酒液清亮通明，白色泡沫，持续时间较短。
-            味道: 随着从干爽到微甜香的变化，麦芽味道的感觉从低到明显，有微微的焦糖和烤面包香， 较淡的酒花苦味，带有辛辣，草药特点。
-            口感: 中度偏淡酒体，顺滑沙口。`,
+            有着微微焦糖、烤面包香气，有一定苦度。相当高的发酵程度。
+            麦芽香气较为明显，酒花味道较淡，花香柔和。
+            琥珀色，酒液清亮通明，白色泡沫，持续时间较短。`,
           alcoholContent: '6% vol',
           originalGravity: '15 P',
           price: 369,
@@ -140,7 +139,7 @@ export default {
   align-items: center; /* 让图片在水平方向上居中显示 */
   border: 1px solid #ccc;
   padding: 10px;
-  width: 30%; /* 每个商品框占据 30% 的宽度，以适应三列布局 */
+  width: 29%; /* 每个商品框占据 30% 的宽度，以适应三列布局 */
   margin: 10px;
   text-align: left; /* 居左显示 */
 }

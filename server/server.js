@@ -204,33 +204,73 @@ app.get('/all-products', async (req, res) => {
 });
 
 
-// 添加搜索产品的路由
+// 修改获取所有产品的路由，支持价格范围搜索
 app.get('/search-products', async (req, res) => {
   try {
     const connection = await pool.getConnection();
-    const { keyword } = req.query;
 
-    // 执行带有模糊查询的SQL语句
-    const query = `
-      SELECT * FROM products
-      WHERE product_name LIKE ? OR raw_material LIKE ? OR manufacturer LIKE ? OR product_desc LIKE ?
-    `;
-    const [products] = await connection.execute(query, [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`]);
+    // 从请求参数中获取页码、每页条目数、关键字和价格范围，默认为第一页，每页10条记录
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const keyword = req.query.keyword || '';
+    const minPrice = req.query.minPrice; // 注意：这里不需要转换为整数
+    const maxPrice = req.query.maxPrice; // 同上
+
+    // 计算偏移量
+    const offset = (page - 1) * limit;
+
+    // 构建基础的查询语句
+    let query = 'SELECT * FROM products WHERE 1 = 1';
+
+    // 添加关键字搜索条件
+    if (keyword) {
+      query += ' AND (product_name LIKE ? OR manufacturer LIKE ? OR raw_material LIKE ? OR product_desc LIKE ?)';
+    }
+
+    // 添加价格范围搜索条件
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      query += ' AND price BETWEEN ? AND ?';
+    }
+
+    // 添加分页查询条件
+    query += ' LIMIT ?, ?';
+
+    // 构建查询参数数组
+    const queryParams = [];
+    if (keyword) {
+      const keywordParam = `%${keyword}%`;
+      queryParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
+    }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      queryParams.push(minPrice, maxPrice);
+    }
+    queryParams.push(offset, limit);
+
+    // 执行查询
+    const [products] = await connection.execute(query, queryParams);
 
     // 获取总记录数，用于前端分页控制
-    const countQuery = `
-      SELECT COUNT(*) as count FROM products
-      WHERE product_name LIKE ? OR raw_material LIKE ? OR manufacturer LIKE ? OR product_desc LIKE ?
-    `;
-    const [countResult] = await connection.execute(countQuery, [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`]);
+    const countQuery = 'SELECT COUNT(*) as count FROM products WHERE 1 = 1';
+    const countParams = [];
+    if (keyword) {
+      countQuery += ' AND (product_name LIKE ? OR manufacturer LIKE ? OR raw_material LIKE ? OR product_desc LIKE ?)';
+      const keywordParam = `%${keyword}%`;
+      countParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
+    }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      countQuery += ' AND price BETWEEN ? AND ?';
+      countParams.push(minPrice, maxPrice);
+    }
+
+    const [countResult] = await connection.execute(countQuery, countParams);
     const totalProducts = countResult[0].count;
 
     connection.release();
 
     res.status(200).json({ success: true, products, totalProducts });
   } catch (error) {
-    console.error('Error searching products', error);
-    res.status(500).json({ success: false, message: `搜索产品失败: ${error.message || error}` });
+    console.error('Error fetching all products', error);
+    res.status(500).json({ success: false, message: `获取所有产品失败: ${error.message || error}` });
   }
 });
 

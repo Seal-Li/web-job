@@ -137,7 +137,7 @@ export default {
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('../assets/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../static/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
 }
 
 .form-container {
