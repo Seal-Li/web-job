@@ -79,11 +79,11 @@
 <script>
 import axios from 'axios';
 import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
-import { useUserStore } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore();
+    const userStore = useAuthStore();
     const { username, email, telphone, usertype, money } = toRefs(userStore.$state);
 
     const state = reactive({

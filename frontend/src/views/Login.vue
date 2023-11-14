@@ -25,12 +25,12 @@
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
-import { useUserStore } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const userStore = useUserStore(); // 获取 user store 实例
+    const userStore = useAuthStore(); // 获取 user store 实例
 
     const loginForm = reactive({
       account: '15965825404',
@@ -104,6 +104,9 @@ export default defineComponent({
         userStore.setTelphone(response.data.user.telphone);
         userStore.setUsertype(response.data.user.user_type);
         userStore.setMoney(response.data.user.money);
+
+        // 更新登录状态
+        userStore.login();
 
         // 如果勾选了记住密码，保存用户名到 localStorage
         if (loginForm.remember) {

@@ -1,16 +1,25 @@
-
 import { defineStore } from 'pinia';
-// console.log('useUserStore defined');
+
+// 定义 useUserStore
 export const useUserStore = defineStore('user', {
   state: () => ({
+    isLoggedIn: false,
     userid: '',
     username: '',
     email: '',
     telphone: '',
     usertype: '',
-    money: ''    
+    money: '',
   }),
   actions: {
+    login() {
+      // 登录逻辑...
+      this.isLoggedIn = true;
+    },
+    logout() {
+      // 注销逻辑...
+      this.isLoggedIn = false;
+    },
     setUserid(newUserid) {
       this.userid = newUserid;
     },
@@ -38,7 +47,10 @@ export const useUserStore = defineStore('user', {
     }
   },
   // 在状态发生变化时将状态保存到 localStorage
-  // onPatchEnd(patch) {
-  //   localStorage.setItem('userStore', JSON.stringify(this.$state));
-  // },
+  onPatchEnd(patch) {
+    localStorage.setItem('userStore', JSON.stringify(this.$state));
+  },
 });
+
+// 将 useUserStore 导出为 authStore
+export const useAuthStore = useUserStore;

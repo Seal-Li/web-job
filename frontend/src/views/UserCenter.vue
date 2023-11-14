@@ -67,12 +67,12 @@
 
 <script>
 import axios from 'axios';
-import { useUserStore } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 import { computed, watchEffect, ref } from 'vue';
 
 export default {
   setup() {
-    const userStore = useUserStore();
+    const userStore = useAuthStore();
 
     // 获取用户名
     const username = computed(() => userStore.username);
@@ -204,7 +204,7 @@ export default {
   width: 60%;
   text-align: left;
   font-size: 18px;
-  line-height: 1.5; /* 调整行高 */
+  line-height: 4; /* 调整行高 */
 }
 
 .info-label {

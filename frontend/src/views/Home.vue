@@ -44,12 +44,12 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 import { computed, watchEffect } from 'vue';
 
 export default {
   setup() {
-    const userStore = useUserStore();
+    const userStore = useAuthStore();
 
     // 获取用户名
     const userid = computed(() => userStore.userid);
