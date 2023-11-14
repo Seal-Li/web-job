@@ -34,7 +34,7 @@ export const useUserStore = defineStore('user', {
     }
   },
   // 在状态发生变化时将状态保存到 localStorage
-  onPatchEnd(patch) {
-    localStorage.setItem('userStore', JSON.stringify(this.$state));
-  },
+  // onPatchEnd(patch) {
+  //   localStorage.setItem('userStore', JSON.stringify(this.$state));
+  // },
 });

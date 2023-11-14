@@ -12,7 +12,7 @@
   }
   </script>
   
-  <style scoped>
-  /* 组件样式 */
-  </style>
+<style scoped>
+@import "../css/Home.css";
+</style>
   
