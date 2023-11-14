@@ -1,13 +1,11 @@
-<!-- Login.vue -->
-
 <template>
   <div class="login-container">
     <el-card class="login-card" shadow="hover">
-      <el-form :model="loginForm" label-width="80px" ref="loginForm" class="login-form">
-        <el-form-item label="用户名" prop="account" :rules="accountRules">
+      <el-form :model="loginForm" label-width="80px" ref="loginData" class="login-form">
+        <el-form-item label="用户名" prop="account" :rules="rules.accountRules">
           <el-input v-model="loginForm.account" placeholder="请输入注册手机号或邮箱" clearable></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password" :rules="passwordRules">
+        <el-form-item label="密码" prop="password" :rules="rules.passwordRules">
           <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" clearable></el-input>
         </el-form-item>
         <el-form-item>
@@ -24,105 +22,99 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { defineComponent, ref, reactive, computed } from 'vue';
+import { useUserStore } from '@/store/auth'; 
 
-// TODO: 记录登录状态
-export default {
-  data() {
-    return {
-      loginForm: {
-        account: '15965825404',
-        password: 'Lhb123!',
-        remember: false,
-      },
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+    const userStore = useUserStore(); // 获取 user store 实例
+
+    const loginForm = reactive({
+      account: '15965825404',
+      password: 'Lhb123!',
+      remember: false,
+    });
+    // console.log(loginForm);
+    const rules = reactive({
       accountRules: [
-        { 
-          required: true, 
-          message: '请输入注册邮箱或手机号', 
-          trigger: 'blur' 
+        {
+          required: true,
+          message: '请输入注册邮箱或手机号',
+          trigger: 'blur',
         },
-        { 
-          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,16}$/, 
-          message: '只能使用英文字符和数字', 
-          trigger: 'blur' 
-        }
+        {
+          pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,16}$/,
+          message: '只能使用英文字符和数字',
+          trigger: 'blur',
+        },
       ],
       passwordRules: [
-        { 
-          required: true, 
-          message: '请输入密码', 
-          trigger: 'blur' 
+        {
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur',
         },
-        { 
-          min: 6, 
-          max: 16, 
-          message: '密码长度必须是6-16位', 
-          trigger: 'blur' 
+        {
+          min: 6,
+          max: 16,
+          message: '密码长度必须是6-16位',
+          trigger: 'blur',
         },
-        { 
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])/, 
-          message: '密码必须同时包含大小写字母', 
-          trigger: 'blur' 
-        }
+        {
+          pattern: /^(?=.*[a-z])(?=.*[A-Z])/,
+          message: '密码必须同时包含大小写字母',
+          trigger: 'blur',
+        },
       ]
+    })
+
+    const isLoginFormValid = computed(() => {
+      return (
+        loginForm &&
+        loginForm.account &&
+        typeof loginForm.account === 'string' &&
+        loginForm.account.trim() !== '' &&
+        loginForm.password &&
+        typeof loginForm.password === 'string' &&
+        loginForm.password.trim() !== ''
+      );
+    });
+
+    const login = async () => {
+      try {
+        // 执行登录逻辑
+        const response = await axios.post('http://localhost:3000/login', {
+          account: loginForm.account,
+          password: loginForm.password,
+        });
+
+        // console.log('发送登录请求成功\n', response.data.user);
+
+        // 使用 Pinia 的 mutation 更新用户名
+        userStore.setUsername(response.data.user.user_name);
+        userStore.setEmail(response.data.user.email)
+        userStore.setTelphone(response.data.user.telphone)
+        userStore.setUsertype(response.data.user.user_type)
+        userStore.setMoney(response.data.user.money)
+
+        // 导航到首页或执行其他操作
+        router.push('/home');
+      } catch (error) {
+        console.error('登录失败，账号或密码错误！', error);
+      }
+    };
+
+    return {
+      loginForm,
+      rules,
+      isLoginFormValid,
+      login,
     };
   },
-  computed: {
-    isLoginFormValid() {
-      return this.loginForm.account.trim() !== '' && this.loginForm.password.trim() !== '';
-    }
-  },
-  watch: {
-    'loginForm.remember': {
-      handler(newValue) {
-        // 如果勾选了记住密码，则将密码保存到本地存储
-        if (newValue) {
-          localStorage.setItem('rememberedPassword', this.loginForm.password);
-          localStorage.setItem('rememberedAccount', this.loginForm.account);
-        } else {
-          // 如果取消勾选记住密码，则清除本地存储的密码
-          localStorage.removeItem('rememberedPassword');
-          localStorage.removeItem('rememberedAccount');
-        }
-      },
-      immediate: true // 立即触发，以便在组件加载时执行
-    }
-  },
-  created() {
-    // 在组件创建时，尝试从本地存储中获取记住的密码
-    const rememberedPassword = localStorage.getItem('rememberedPassword');
-    const rememberedAccount = localStorage.getItem('rememberedAccount');
-
-    if (rememberedPassword && rememberedAccount) {
-      this.loginForm.password = rememberedPassword;
-      this.loginForm.account = rememberedAccount;
-      this.loginForm.remember = true;
-    }
-  },
-  methods: {
-    login() {
-      // 执行登录逻辑
-      console.log('登录');
-      if (this.isLoginFormValid) {
-        axios.post('http://localhost:3000/login', {
-          account: this.loginForm.account,
-          password: this.loginForm.password
-        })
-        .then(response => {
-          console.log('登录成功', response.data);
-          // 导航到首页或执行其他操作
-          this.$router.push('/home');
-        })
-        .catch(error => {
-          console.error('登录失败，账号或密码错误！', error);
-        });
-      } else {
-        console.error('登录失败，账号或密码错误！');
-      }
-    }
-
-  }
-};
+});
 </script>
 
 <style scoped>
