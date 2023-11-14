@@ -204,7 +204,7 @@ app.get('/all-products', async (req, res) => {
 });
 
 
-// 修改获取所有产品的路由，支持价格范围搜索
+// 获取相关产品的路由，支持价格范围搜索
 app.get('/search-products', async (req, res) => {
   try {
     const connection = await pool.getConnection();
@@ -224,46 +224,41 @@ app.get('/search-products', async (req, res) => {
 
     // 添加关键字搜索条件
     if (keyword) {
-      query += ' AND (product_name LIKE ? OR manufacturer LIKE ? OR raw_material LIKE ? OR product_desc LIKE ?)';
+      query += ' AND (product_name LIKE ? OR manufacturer LIKE ? OR raw_material LIKE ? OR product_desc LIKE ?) ';
     }
 
     // 添加价格范围搜索条件
     if (minPrice !== undefined && maxPrice !== undefined) {
-      query += ' AND price BETWEEN ? AND ?';
+      query += ' AND price BETWEEN ? AND ? ';
     }
 
+    // 在这里拦截计算不分页时的查询语句
+    query_unlimit = query;
+    
     // 添加分页查询条件
     query += ' LIMIT ?, ?';
 
     // 构建查询参数数组
     const queryParams = [];
+    const query_unlimitParams = [];
     if (keyword) {
       const keywordParam = `%${keyword}%`;
       queryParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
+      query_unlimitParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
     }
     if (minPrice !== undefined && maxPrice !== undefined) {
       queryParams.push(minPrice, maxPrice);
+      query_unlimitParams.push(minPrice, maxPrice);
     }
     queryParams.push(offset, limit);
 
     // 执行查询
     const [products] = await connection.execute(query, queryParams);
 
-    // 获取总记录数，用于前端分页控制
-    const countQuery = 'SELECT COUNT(*) as count FROM products WHERE 1 = 1';
-    const countParams = [];
-    if (keyword) {
-      countQuery += ' AND (product_name LIKE ? OR manufacturer LIKE ? OR raw_material LIKE ? OR product_desc LIKE ?)';
-      const keywordParam = `%${keyword}%`;
-      countParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
-    }
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      countQuery += ' AND price BETWEEN ? AND ?';
-      countParams.push(minPrice, maxPrice);
-    }
-
-    const [countResult] = await connection.execute(countQuery, countParams);
-    const totalProducts = countResult[0].count;
+    // 计算满足条件的产品总记录数，用于前端分页控制
+    const [productsAll] = await connection.execute(query_unlimit, query_unlimitParams);
+    const totalProducts = productsAll.length;
+    // console.log("结果总数：", totalProducts)
 
     connection.release();
 

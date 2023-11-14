@@ -69,7 +69,7 @@
         <div class="pagination">
           <button :disabled="currentPage === 1" @click="prevPage" class="pagination-button">上一页</button>
           <span>第 {{ currentPage }} 页 / 共 {{ totalPages }} 页</span>
-          <button :disabled="currentPage === totalPages" @click="nextPage" class="pagination-button">下一页</button>
+          <button :disabled="currentPage === totalPages || totalPages === 0" @click="nextPage" class="pagination-button">下一页</button>
         </div>
       </div>
     </div>
@@ -84,6 +84,8 @@ export default {
     return {
       itemsPerRow: 1,
       isSideBarHidden: false,
+      initialLoad: true,
+      isSearching: false,
       products: [],
       navItems: [
         { id: 0, label: '首页', routeName: 'Home' },
@@ -109,57 +111,63 @@ export default {
     };
   },
   created() {
-    this.fetchAllProducts();
+    this.fetchProducts();
   },
   methods: {
     logout() {
       console.log('执行退出登录操作');
     },
-    async fetchAllProducts() {
+    async fetchProducts() {
       try {
-        const response = await axios.get('http://localhost:3000/all-products', {
-          params: {
+        let apiUrl = 'http://localhost:3000/all-products';
+        let params = {
+          page: this.currentPage,
+          limit: this.perPage,
+        };
+
+        if (this.isSearching) {
+          apiUrl = 'http://localhost:3000/search-products';
+          params = {
+            keyword: this.searchKeyword,
+            minPrice: this.minPrice || undefined,
+            maxPrice: this.maxPrice || undefined,
             page: this.currentPage,
             limit: this.perPage,
-          },
-        });
+          };
+        }
+
+        const response = await axios.get(apiUrl, { params });
         this.products = response.data.products;
         this.totalProducts = response.data.totalProducts;
+
+        // 计算总页数
         this.totalPages = Math.ceil(this.totalProducts / this.perPage);
+        // console.log('当前总页数:', this.totalPages);
       } catch (error) {
-        console.error('Error fetching all products', error);
+        console.error('未能获取到数据', error);
       }
     },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchAllProducts();
-      }
-    },
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
-        this.fetchAllProducts();
+        // console.log('下一页：', this.currentPage);
+        this.fetchProducts();
       }
     },
-    async searchProducts() {
-      try {
-        const params = {
-          keyword: this.searchKeyword,
-          minPrice: this.minPrice,
-          maxPrice: this.maxPrice,
-        };
 
-        const response = await this.$axios.get('http://localhost:3000/search-products', { params });
-        // 输出响应数据，检查是否有返回数据
-        console.log(response.data);
-
-        this.products = response.data.products;
-        this.totalProducts = response.data.totalProducts;
-        this.currentPage = 1; // 重置当前页为第一页
-      } catch (error) {
-        console.error('搜索产品失败', error);
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        // console.log('上一页：', this.currentPage);
+        this.fetchProducts();
       }
+    },
+
+    async searchProducts() {
+      this.isSearching = true;
+      this.currentPage = 1;
+      await this.fetchProducts();
     },
   },
   computed: {
