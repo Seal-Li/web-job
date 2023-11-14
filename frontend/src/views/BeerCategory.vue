@@ -36,10 +36,15 @@
       <div class="content">
         <!-- 在搜索框旁边添加价格范围搜索框 -->
         <div class="search-bar">
-          <input v-model="searchKeyword" type="text" placeholder="输入关键字搜索">
-          <input v-model.number="minPrice" type="number" placeholder="最低价格">
-          <input v-model.number="maxPrice" type="number" placeholder="最高价格">
-          <button @click="searchProducts">搜索</button>
+          <div class="search-inputs">
+            <input v-model="searchKeyword" type="text" placeholder="输入关键字搜索">
+            <input v-model.number="minPrice" type="number" placeholder="最低价格">
+            <input v-model.number="maxPrice" type="number" placeholder="最高价格">
+          </div>
+          <div class="search-buttons">
+            <el-button @click="searchProducts" type="primary">搜索</el-button>
+            <el-button v-if="usertype === 'Admin'" type="primary" @click="addNewData">添加新数据</el-button>
+          </div>
         </div>
         <br>
         <table>
@@ -61,6 +66,12 @@
               <td>{{ product.manufacturer }}</td>
               <td>{{ product.raw_material }}</td>
               <td>{{ product.product_desc }}</td>
+
+              <!-- 编辑和删除按钮，仅对Admin用户可见 -->
+              <td v-if="usertype === 'Admin'">
+                <el-button @click="editProduct(product)">编辑</el-button>
+                <el-button type="danger" @click="deleteProduct(product)">删除</el-button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -80,8 +91,12 @@
 import axios from 'axios';
 import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
 import { useAuthStore } from '@/store/auth';
+import { ElButton, ElMessageBox } from 'element-plus'; // 导入 Element Plus 的按钮和消息框组件
 
 export default defineComponent({
+  components: {
+    ElButton,
+  },
   setup() {
     const userStore = useAuthStore();
     const { username, email, telphone, usertype, money } = toRefs(userStore.$state);
@@ -178,6 +193,28 @@ export default defineComponent({
       );
     });
 
+    const addNewData = () => {
+      // 添加新数据操作，您可以根据需要进行相应的处理
+      console.log('添加新数据');
+    };
+
+    const editProduct = (product) => {
+      // 编辑产品操作，您可以根据需要进行相应的处理
+      console.log('编辑产品', product);
+    };
+
+    const deleteProduct = (product) => {
+      // 删除产品操作，您可以根据需要进行相应的处理
+      ElMessageBox.confirm('确定删除该产品吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        console.log('删除产品', product);
+        // 在这里执行删除产品的逻辑
+      });
+    };
+
     return {
       ...toRefs(state),
       username,
@@ -190,6 +227,7 @@ export default defineComponent({
       prevPage,
       searchProducts,
       sideItemsInRows,
+      addNewData,
     };
   },
 });
@@ -297,6 +335,22 @@ th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
 
 .pagination-button {
   margin: 0 10px; /* 调整按钮间距 */
+}
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-inputs {
+  display: flex;
+  gap: 30px; /* 你可以根据需要调整间距 */
+}
+
+.search-buttons {
+  display: flex;
+  gap: 30px; /* 你可以根据需要调整间距 */
 }
 
 </style>
