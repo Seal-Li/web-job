@@ -44,12 +44,31 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/auth';
+import { computed, watchEffect } from 'vue';
+
 export default {
+  setup() {
+    const userStore = useUserStore();
+
+    // 获取用户名
+    const username = computed(() => userStore.username);
+
+    // 在用户信息更新时自动更新用户名
+    watchEffect(() => {
+      console.log('User info updated:', userStore.$state);
+      // 这里可以执行一些其他的逻辑
+    });
+
+    return {
+      username,
+      // 其他返回的数据
+    };
+  },
   data() {
     return {
       itemsPerRow: 1,
       productsPerRow: 3,
-      username: '用户1', // 替换为实际的用户名
       isSideBarHidden: false,
       navItems: [
         { id: 0, label: '首页', routeName: 'Home' },

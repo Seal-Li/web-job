@@ -25,5 +25,16 @@ export const useUserStore = defineStore('user', {
     setMoney(newMoney) {
       this.money = newMoney;
     },
-  }
+  },
+  // 在创建 store 时从 localStorage 中获取状态
+  onInit() {
+    const storedState = localStorage.getItem('userStore');
+    if (storedState) {
+      this.$patch(JSON.parse(storedState));
+    }
+  },
+  // 在状态发生变化时将状态保存到 localStorage
+  onPatchEnd(patch) {
+    localStorage.setItem('userStore', JSON.stringify(this.$state));
+  },
 });

@@ -78,10 +78,15 @@
 
 <script>
 import axios from 'axios';
+import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
+import { useUserStore } from '@/store/auth';
 
-export default {
-  data() {
-    return {
+export default defineComponent({
+  setup() {
+    const userStore = useUserStore();
+    const { username, email, telphone, usertype, money } = toRefs(userStore.$state);
+
+    const state = reactive({
       itemsPerRow: 1,
       isSideBarHidden: false,
       initialLoad: true,
@@ -108,77 +113,86 @@ export default {
       totalPages: 0,
       minPrice: null,
       maxPrice: null,
-    };
-  },
-  created() {
-    this.fetchProducts();
-  },
-  methods: {
-    logout() {
-      console.log('执行退出登录操作');
-      this.$router.push('/');
-    },
-    async fetchProducts() {
+    });
+
+    const fetchProducts = async () => {
       try {
         let apiUrl = 'http://localhost:3000/all-products';
         let params = {
-          page: this.currentPage,
-          limit: this.perPage,
+          page: state.currentPage,
+          limit: state.perPage,
         };
 
-        if (this.isSearching) {
+        if (state.isSearching) {
           apiUrl = 'http://localhost:3000/search-products';
           params = {
-            keyword: this.searchKeyword,
-            minPrice: this.minPrice || undefined,
-            maxPrice: this.maxPrice || undefined,
-            page: this.currentPage,
-            limit: this.perPage,
+            keyword: state.searchKeyword,
+            minPrice: state.minPrice || undefined,
+            maxPrice: state.maxPrice || undefined,
+            page: state.currentPage,
+            limit: state.perPage,
           };
         }
 
         const response = await axios.get(apiUrl, { params });
-        this.products = response.data.products;
-        this.totalProducts = response.data.totalProducts;
+        state.products = response.data.products;
+        state.totalProducts = response.data.totalProducts;
 
         // 计算总页数
-        this.totalPages = Math.ceil(this.totalProducts / this.perPage);
-        // console.log('当前总页数:', this.totalPages);
+        state.totalPages = Math.ceil(state.totalProducts / state.perPage);
+        // console.log('当前总页数:', state.totalPages);
       } catch (error) {
         console.error('未能获取到数据', error);
       }
-    },
+    };
 
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        // console.log('下一页：', this.currentPage);
-        this.fetchProducts();
+    const nextPage = () => {
+      if (state.currentPage < state.totalPages) {
+        state.currentPage++;
+        // console.log('下一页：', state.currentPage);
+        fetchProducts();
       }
-    },
+    };
 
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        // console.log('上一页：', this.currentPage);
-        this.fetchProducts();
+    const prevPage = () => {
+      if (state.currentPage > 1) {
+        state.currentPage--;
+        // console.log('上一页：', state.currentPage);
+        fetchProducts();
       }
-    },
+    };
 
-    async searchProducts() {
-      this.isSearching = true;
-      this.currentPage = 1;
-      await this.fetchProducts();
-    },
-  },
-  computed: {
-    sideItemsInRows() {
-      return Array.from({ length: Math.ceil(this.sideItems.length / this.itemsPerRow) }, (v, i) =>
-        this.sideItems.slice(i * this.itemsPerRow, i * this.itemsPerRow + this.itemsPerRow)
+    const searchProducts = async () => {
+      state.isSearching = true;
+      state.currentPage = 1;
+      await fetchProducts();
+    };
+
+    onMounted(() => {
+      fetchProducts();
+    });
+
+    const sideItemsInRows = computed(() => {
+      return Array.from({ length: Math.ceil(state.sideItems.length / state.itemsPerRow) }, (v, i) =>
+        state.sideItems.slice(i * state.itemsPerRow, i * state.itemsPerRow + state.itemsPerRow)
       );
-    },
+    });
+
+    return {
+      ...toRefs(state),
+      username,
+      email,
+      telphone,
+      usertype,
+      money,
+      fetchProducts,
+      nextPage,
+      prevPage,
+      searchProducts,
+      sideItemsInRows,
+    };
   },
-};
+});
 </script>
 
 <style scoped>

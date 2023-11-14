@@ -24,8 +24,8 @@
 <script>
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { defineComponent, ref, reactive, computed } from 'vue';
-import { useUserStore } from '@/store/auth'; 
+import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
+import { useUserStore } from '@/store/auth';
 
 export default defineComponent({
   setup() {
@@ -37,7 +37,14 @@ export default defineComponent({
       password: 'Lhb123!',
       remember: false,
     });
-    // console.log(loginForm);
+
+    // 尝试从 localStorage 中获取保存的用户信息
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      loginForm.account = storedUsername;
+      loginForm.remember = true;
+    }
+
     const rules = reactive({
       accountRules: [
         {
@@ -68,8 +75,8 @@ export default defineComponent({
           message: '密码必须同时包含大小写字母',
           trigger: 'blur',
         },
-      ]
-    })
+      ],
+    });
 
     const isLoginFormValid = computed(() => {
       return (
@@ -85,20 +92,24 @@ export default defineComponent({
 
     const login = async () => {
       try {
-        // 执行登录逻辑
         const response = await axios.post('http://localhost:3000/login', {
           account: loginForm.account,
           password: loginForm.password,
         });
 
-        // console.log('发送登录请求成功\n', response.data.user);
-
-        // 使用 Pinia 的 mutation 更新用户名
+        // 更新用户信息
         userStore.setUsername(response.data.user.user_name);
-        userStore.setEmail(response.data.user.email)
-        userStore.setTelphone(response.data.user.telphone)
-        userStore.setUsertype(response.data.user.user_type)
-        userStore.setMoney(response.data.user.money)
+        userStore.setEmail(response.data.user.email);
+        userStore.setTelphone(response.data.user.telphone);
+        userStore.setUsertype(response.data.user.user_type);
+        userStore.setMoney(response.data.user.money);
+
+        // 如果勾选了记住密码，保存用户名到 localStorage
+        if (loginForm.remember) {
+          localStorage.setItem('username', loginForm.account);
+        } else {
+          localStorage.removeItem('username');
+        }
 
         // 导航到首页或执行其他操作
         router.push('/home');

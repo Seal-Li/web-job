@@ -39,3 +39,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // 挂载应用
 app.mount('#app');
+
+// const userStore = useUserStore();
+// userStore.$onInit();
