@@ -247,6 +247,7 @@ app.get('/search-products', async (req, res) => {
       query_unlimitParams.push(keywordParam, keywordParam, keywordParam, keywordParam);
     }
     if (minPrice !== undefined && maxPrice !== undefined) {
+      // TODO: minPrice = 0时，条件失效
       queryParams.push(minPrice, maxPrice);
       query_unlimitParams.push(minPrice, maxPrice);
     }
