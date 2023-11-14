@@ -116,6 +116,7 @@ export default {
   methods: {
     logout() {
       console.log('执行退出登录操作');
+      this.$router.push('/');
     },
     async fetchProducts() {
       try {

@@ -61,6 +61,7 @@ export default {
     logout() {
       // 处理退出登录逻辑
       console.log('执行退出登录操作');
+      this.$router.push('/');
     },
   },
   computed: {
