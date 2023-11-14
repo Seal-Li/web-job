@@ -44,11 +44,13 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 import { computed, watchEffect } from 'vue';
 
 export default {
   setup() {
+    const router = useRouter();
     const userStore = useAuthStore();
 
     // 获取用户名
@@ -65,6 +67,16 @@ export default {
       // 这里可以执行一些其他的逻辑
     });
 
+    const logout = () => {
+      // 处理退出登录逻辑
+      console.log('执行退出登录操作');
+      // 更新登录状态
+      userStore.logout();
+
+      // 导航到登录页面并替换当前路由历史
+      router.push('/');
+    };
+
     return {
       userid,
       username,
@@ -72,6 +84,9 @@ export default {
       telphone,
       usertype,
       money,
+      router,
+      userStore,
+      logout,
       // 其他返回的数据
     };
   },
@@ -138,12 +153,7 @@ export default {
     };
   },
   methods: {
-    logout() {
-      // 处理退出登录逻辑
-      console.log('执行退出登录操作');
-      // 导航到登录页面并替换当前路由历史
-      this.$router.push('/');
-    },
+    
   },
   computed: {
     sideItemsInRows() {
