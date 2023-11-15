@@ -6,13 +6,20 @@ import { router } from './router';
 import axios from 'axios';
 import { createPinia } from 'pinia'; // 引入 createPinia
 import { useUserStore } from './store/auth'; // 引入 useUserStore
-
+import pinia from '@store'
 // 全局引入
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const myPinia = createPinia()
+myPinia.use(piniaPluginPersistedstate)
+
 axios.defaults.baseURL = 'http://localhost:3000';
+
+
 
 const app = createApp(App);
 
@@ -20,7 +27,7 @@ const app = createApp(App);
 const pinia = createPinia();
 
 // 使用 Pinia 插件
-app.use(pinia);
+app.use(myPinia);
 
 // 使用 axios
 app.config.globalProperties.$axios = axios;

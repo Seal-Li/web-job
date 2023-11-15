@@ -1,8 +1,9 @@
 import { createPinia } from 'pinia';
-import { useUserStore } from '@/store/auth';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 const pinia = createPinia();
 
-pinia.use(useUserStore);
+// 使用 pinia-plugin-persistedstate 插件
+pinia.use(piniaPluginPersistedstate, { key: 'userStore' });
 
 export { pinia };
