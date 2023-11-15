@@ -211,7 +211,6 @@ export default defineComponent({
       clearForm();
       // 将dialogVisible设置为true，显示弹窗
       dialogVisible.value = true;
-      console.log('添加新数据');
     };
 
     const editProduct = (product) => {
@@ -236,7 +235,6 @@ export default defineComponent({
           raw_material: product.editingRawMaterial,
           product_desc: product.editingDesc,
         });
-        console.log("修改完成")
         if (response.data.success) {
           // 保存成功后，退出编辑状态
           product.editing = false;
@@ -252,17 +250,14 @@ export default defineComponent({
 
     const deleteProduct = async (product) => {
       try {
-        console.log("删除动作开始");
         const confirmed = await ElMessageBox.confirm('确定删除该产品吗？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         }).catch(() => {});
-        console.log("删除动作提示完毕");
         if (confirmed) {
           // 发送请求将产品从后端删除
           await axios.post('http://localhost:3000/delete-product', { product_id: product.product_id });
-          console.log("删除请求已发送");
           // 刷新产品列表
           fetchProducts();
         }
