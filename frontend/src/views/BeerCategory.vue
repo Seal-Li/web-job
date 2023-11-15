@@ -101,21 +101,52 @@
       </div>
     </div>
   </div>
+
+  <el-dialog v-model="dialogVisible" title="请输入您要添加的数据信息" :center="true">
+    <!-- 对话框内容 -->
+    <el-form :model="newProduct" ref="newProductForm" label-width="80px">
+      <el-form-item label="产品名称" prop="product_name">
+        <el-input v-model="newProduct.product_name"></el-input>
+      </el-form-item>
+      <el-form-item label="价格" prop="price">
+        <el-input v-model.number="newProduct.price"></el-input>
+      </el-form-item>
+      <el-form-item label="制造商" prop="manufacturer">
+        <el-input v-model="newProduct.manufacturer"></el-input>
+      </el-form-item>
+      <el-form-item label="生产原料" prop="raw_material">
+        <el-input v-model="newProduct.raw_material"></el-input>
+      </el-form-item>
+      <el-form-item label="产品描述" prop="product_desc">
+        <el-input v-model="newProduct.product_desc"></el-input>
+      </el-form-item>
+
+      <!-- 其他表单项可以按照需要添加 -->
+
+      <!-- 操作按钮 -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleAddData">确定</el-button>
+      </div>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script>
 import axios from 'axios';
 import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
 import { useAuthStore } from '@/store/auth';
-import { ElMessageBox } from 'element-plus';
+import { ElMessageBox, ElDialog} from 'element-plus';
 
 export default defineComponent({
   components: {
-    ElMessageBox
+    ElMessageBox,
+    ElDialog,
   },
   setup() {
     const userStore = useAuthStore();
     const { username, email, telphone, usertype, money } = toRefs(userStore.$state);
+    const dialogVisible = ref(false);
 
     const state = reactive({
       itemsPerRow: 1,
@@ -207,10 +238,48 @@ export default defineComponent({
     });
 
     const addNewData = () => {
-      // 清空表单数据
-      clearForm();
       // 将dialogVisible设置为true，显示弹窗
       dialogVisible.value = true;
+    };
+
+    const newProduct = reactive({
+      product_name: '',
+      price: '',
+      manufacturer: '',
+      raw_material: '',
+      product_desc: ''
+      // 可以根据需要添加其他属性
+    });
+
+    const handleAddData = () => {
+      // 手动检查表单项是否为空
+      const isFormEmpty = Object.values(newProduct).every(value => !value);
+      if (isFormEmpty) {
+        console.error('请填写至少一个表单项');
+        return;
+      }
+
+      // 添加成功后关闭对话框
+      dialogVisible.value = false;
+
+      // 提示用户添加成功
+      ElMessageBox.alert('添加成功', '提示', {
+        confirmButtonText: '确定',
+      });
+
+      // 可以根据需要清空表单数据
+      clearForm();
+    };
+
+    const clearForm = () => {
+      // 清空表单数据
+      newProduct.product_name = '';
+      newProduct.price = null;
+      newProduct.manufacturer = '';
+      newProduct.raw_material = '';
+      newProduct.product_desc = '';
+
+      // 可以根据需要清空其他属性
     };
 
     const editProduct = (product) => {
@@ -282,7 +351,11 @@ export default defineComponent({
       editProduct,
       saveProduct,
       deleteProduct,
-      ElMessageBox
+      ElMessageBox,
+      dialogVisible,
+      newProduct,
+      handleAddData,
+      clearForm
     };
   },
 });

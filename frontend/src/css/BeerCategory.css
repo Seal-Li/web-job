@@ -116,3 +116,12 @@ th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
   display: flex;
   gap: 30px; /* 你可以根据需要调整间距 */
 }
+
+.el-dialog .el-dialog__title {
+  text-align: center;
+}
+
+.dialog-footer {
+  text-align: right;
+  padding: 10px;
+}
