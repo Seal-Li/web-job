@@ -28,6 +28,10 @@ import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
 import { useAuthStore } from '@/store/auth';
 
 export default defineComponent({
+  mounted() {
+    // 将 body 的 margin 设置为 0
+    document.body.style.margin = '0';
+  },
   setup() {
     const router = useRouter();
     const userStore = useAuthStore(); // 获取 user store 实例

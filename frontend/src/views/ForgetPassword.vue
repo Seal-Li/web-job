@@ -34,6 +34,10 @@
 import axios from 'axios';
 
 export default {
+  mounted() {
+    // 将 body 的 margin 设置为 0
+    document.body.style.margin = '0';
+  },
   data() {
     return {
       formData: {

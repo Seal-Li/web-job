@@ -49,6 +49,10 @@ import { useAuthStore } from '@/store/auth';
 import { computed, watchEffect } from 'vue';
 
 export default {
+  mounted() {
+    // 将 body 的 margin 设置为 0
+    document.body.style.margin = '0';
+  },
   setup() {
     const router = useRouter();
     const userStore = useAuthStore();

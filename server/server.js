@@ -13,8 +13,8 @@ const productAddRoutes = require('./routes/productAddRoutes');
 
 // 使用路由
 app.use(userLoginRoutes);
-app.use( userRegistrationRoutes);
-app.use( passwordResetRoutes);
+app.use(userRegistrationRoutes);
+app.use(passwordResetRoutes);
 app.use(accountExistenceRoutes);
 app.use(allProductRoutes);
 app.use(productSearchRoutes);

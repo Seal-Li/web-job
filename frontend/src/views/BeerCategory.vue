@@ -137,6 +137,10 @@ import { useAuthStore } from '@/store/auth';
 import { ElMessageBox, ElDialog} from 'element-plus';
 
 export default defineComponent({
+  mounted() {
+    // 将 body 的 margin 设置为 0
+    document.body.style.margin = '0';
+  },
   components: {
     ElMessageBox,
     ElDialog,
