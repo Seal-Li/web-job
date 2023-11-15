@@ -251,7 +251,7 @@ export default defineComponent({
       // 可以根据需要添加其他属性
     });
 
-    const handleAddData = () => {
+    const handleAddData = async () => {
       // 手动检查表单项是否为空
       const isFormEmpty = Object.values(newProduct).every(value => !value);
       if (isFormEmpty) {
@@ -259,16 +259,32 @@ export default defineComponent({
         return;
       }
 
-      // 添加成功后关闭对话框
-      dialogVisible.value = false;
+      try {
+        // 发送请求将数据添加到后端
+        const response = await axios.post('http://localhost:3000/add-product', newProduct);
 
-      // 提示用户添加成功
-      ElMessageBox.alert('添加成功', '提示', {
-        confirmButtonText: '确定',
-      });
+        if (response.data.success) {
+          // 添加成功后关闭对话框
+          dialogVisible.value = false;
 
-      // 可以根据需要清空表单数据
-      clearForm();
+          // 提示用户添加成功
+          ElMessageBox.alert('添加成功', '提示', {
+            confirmButtonText: '确定',
+          });
+
+          // 清空表单数据
+          clearForm();
+
+          // 刷新产品列表
+          fetchProducts();
+        } else {
+          clearForm();
+          console.error('添加失败');
+        }
+      } catch (error) {
+        clearForm();
+        console.error('添加失败', error);
+      }
     };
 
     const clearForm = () => {
