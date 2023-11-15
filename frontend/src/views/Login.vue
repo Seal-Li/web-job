@@ -32,14 +32,10 @@ export default defineComponent({
     const router = useRouter();
     const userStore = useAuthStore(); // 获取 user store 实例
 
-    const storedAccount = localStorage.getItem('account');
-    const storedPassword = localStorage.getItem('password');
-    const storedRemember = localStorage.getItem('remember') === 'true';
-
     const loginForm = reactive({
-      account: storedAccount, //'15965825404',
-      password: storedPassword, // 'Lhb123!',
-      remember: storedRemember || false,
+      account: '15965825404',
+      password: 'Lhb123!',
+      remember: false,
     });
 
     // 尝试从 localStorage 中获取保存的用户信息
@@ -112,16 +108,13 @@ export default defineComponent({
         // 更新登录状态
         userStore.login();
 
-        // 保存记住密码状态到 localStorage
-        localStorage.setItem('remember', loginForm.remember);
-        // 如果勾选了记住密码，保存用户名和密码到 localStorage
+        // 如果勾选了记住密码，保存用户名到 localStorage
         if (loginForm.remember) {
           localStorage.setItem('account', loginForm.account);
           localStorage.setItem('password', loginForm.password);
         } else {
-          // 如果未勾选，清空用户名和密码
           localStorage.removeItem('account');
-          localStorage.removeItem('password');
+          localStorage.setItem('password', loginForm.password);
         }
 
         // 导航到首页或执行其他操作
