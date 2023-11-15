@@ -135,7 +135,7 @@ export default {
     async register() {
       try {
         // 发送注册数据到后端
-        const response = await axios.post('http://localhost:3000/register', this.registerForm);
+        const response = await axios.post('/register', this.registerForm);
 
         // 处理后端返回的结果
         if (response.data.success) {

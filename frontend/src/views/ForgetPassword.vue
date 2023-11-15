@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     validateAccountExistence(rule, value, callback) {
-      axios.post('http://localhost:3000/check-account-existence', { account: value })
+      axios.post('/check-account-existence', { account: value })
         .then(response => {
           if (response.data.exists) {
             callback();
@@ -108,7 +108,7 @@ export default {
     },
     async resetPassword() {
       try {
-        const response = await axios.post('http://localhost:3000/reset-password', {
+        const response = await axios.post('/reset-password', {
           account: this.formData.account,
           newPassword: this.formData.newPassword,
         });

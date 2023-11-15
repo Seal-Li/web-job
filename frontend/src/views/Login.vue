@@ -92,7 +92,7 @@ export default defineComponent({
 
     const login = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/login', {
+        const response = await axios.post('/login', {
           account: loginForm.account,
           password: loginForm.password,
         });

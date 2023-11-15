@@ -179,14 +179,14 @@ export default defineComponent({
 
     const fetchProducts = async () => {
       try {
-        let apiUrl = 'http://localhost:3000/all-products';
+        let apiUrl = '/all-products';
         let params = {
           page: state.currentPage,
           limit: state.perPage,
         };
 
         if (state.isSearching) {
-          apiUrl = 'http://localhost:3000/search-products';
+          apiUrl = '/search-products';
           params = {
             keyword: state.searchKeyword,
             minPrice: state.minPrice || undefined,
@@ -261,7 +261,7 @@ export default defineComponent({
 
       try {
         // 发送请求将数据添加到后端
-        const response = await axios.post('http://localhost:3000/add-product', newProduct);
+        const response = await axios.post('/add-product', newProduct);
 
         if (response.data.success) {
           // 添加成功后关闭对话框
@@ -312,7 +312,7 @@ export default defineComponent({
     const saveProduct = async (product) => {
       // 发送请求保存数据的逻辑
       try {
-        const response = await axios.post('http://localhost:3000/update-product', {
+        const response = await axios.post('/update-product', {
           product_id: product.product_id,
           product_name: product.editingName,
           price: product.editingPrice,
@@ -342,7 +342,7 @@ export default defineComponent({
         }).catch(() => {});
         if (confirmed) {
           // 发送请求将产品从后端删除
-          await axios.post('http://localhost:3000/delete-product', { product_id: product.product_id });
+          await axios.post('/delete-product', { product_id: product.product_id });
           // 刷新产品列表
           fetchProducts();
         }

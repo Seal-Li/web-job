@@ -100,7 +100,7 @@ export default {
       if (isEditing.value) {
         // 处于编辑模式，保存信息到后端数据库
         try {
-          let response = await axios.post('http://localhost:3000/update-user-info', {
+          let response = await axios.post('/update-user-info', {
             userid: userStore.userid,
             username: editedUsername.value,
             telphone: editedTelphone.value,

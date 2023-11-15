@@ -12,6 +12,8 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
+axios.defaults.baseURL = 'http://localhost:3000';
+
 const app = createApp(App);
 
 // 创建 Pinia 实例
