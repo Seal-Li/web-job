@@ -13,8 +13,8 @@ const productAddRoutes = require('./routes/productAddRoutes');
 
 // 使用路由
 app.use(userLoginRoutes);
-app.use(userRegistrationRoutes);
-app.use(passwordResetRoutes);
+app.use( userRegistrationRoutes);
+app.use( passwordResetRoutes);
 app.use(accountExistenceRoutes);
 app.use(allProductRoutes);
 app.use(productSearchRoutes);
@@ -24,7 +24,7 @@ app.use(productDeleteRoutes);
 app.use(productAddRoutes);
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 启动服务器
 app.listen(PORT, () => {

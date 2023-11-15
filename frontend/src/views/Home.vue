@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- 上方导航栏 -->
     <div class="nav-bar">
-      <div class="welcome">欢迎用户<br>{{ username }}！</div>
+      <div class="welcome">欢迎{{ username }}！</div>
       <!-- 使用 router-link 实现导航 -->
       <router-link v-for="item in navItems" :key="item.id" :to="{ name: item.routeName }" class="nav-item" :data-route-name="item.routeName">
         {{ item.label }}
@@ -106,9 +106,6 @@ export default {
         { id: 2, label: '我的订单', routeName: 'myOrders' },
         { id: 3, label: '我的收藏', routeName: 'myFavorites' },
         { id: 4, label: '我的地址', routeName: 'myAddresses' },
-        { id: 5, label: '反馈进度', routeName: 'feedbackStatus' },
-        { id: 6, label: '发布记录', routeName: 'releaseRecord' },
-        { id: 7, label: '我要接单', routeName: 'offerMeOrder' },
 
       ],
       latestProducts: [
