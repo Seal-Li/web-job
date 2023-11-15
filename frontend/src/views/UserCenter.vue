@@ -32,29 +32,36 @@
         <!-- 展示用户信息的容器 -->
         <div class="user-info-container">
           <div>
-            <button class="edit-button" @click="saveInfo">
+            <el-button class="edit-button" @click="saveInfo">
               {{ isEditing ? '保存信息' : '编辑信息' }}
-            </button>
+            </el-button>
           </div>
           <div>
             <span class="info-label">用户名：</span>
             <span v-if="!isEditing" class="info-text">{{ username }}</span>
-            <input v-if="isEditing" v-model="editedUsername" :readonly="!isEditing" />
+            <el-input v-if="isEditing" v-model="editedUsername" :readonly="!isEditing"> </el-input>
           </div>
           <div>
             <span class="info-label">绑定手机号：</span>
             <span v-if="!isEditing" class="info-text">{{ telphone }}</span>
-            <input v-if="isEditing" v-model="editedTelphone" :readonly="!isEditing" />
+            <el-input v-if="isEditing" v-model="editedTelphone" :readonly="!isEditing"> </el-input>
           </div>
           <div>
             <span class="info-label">绑定邮箱：</span>
             <span v-if="!isEditing" class="info-text">{{ email }}</span>
-            <input v-if="isEditing" v-model="editedEmail" :readonly="!isEditing" />
+            <el-input v-if="isEditing" v-model="editedEmail" :readonly="!isEditing"> </el-input>
           </div>
           <div>
             <span class="info-label">用户类型：</span>
             <span v-if="!isEditing" class="info-text">{{ usertype }}</span>
-            <input v-if="isEditing" v-model="editedUsertype" :readonly="!isEditing" />
+            <el-select v-if="isEditing" v-model="editedUsertype" :readonly="!isEditing" placeholder="请选择用户类型">
+              <el-option
+                v-for="type in userTypes"
+                :key="type.value"
+                :label="type.label"
+                :value="type.value"
+                :disabled="isUserTypeDisabled(type.value)"></el-option>
+            </el-select>
           </div>
         </div>
 
@@ -73,6 +80,17 @@ import { computed, watchEffect, ref } from 'vue';
 export default {
   setup() {
     const userStore = useAuthStore();
+
+    const userTypes = [
+      { value: 'Consumer', label: '消费者' },
+      { value: 'Dealer', label: '经销商' },
+      { value: 'Admin', label: '管理员' },
+    ];
+
+    const isUserTypeDisabled = (type) => {
+      // 用户类型为管理员时不可编辑
+      return isEditing.value && userStore.usertype === 'Admin';
+    };
 
     // 获取用户名
     const username = computed(() => userStore.username);
@@ -161,6 +179,8 @@ export default {
       saveInfo,
       toggleEditing,
       logout,
+      userTypes,
+      isUserTypeDisabled,
     };
   },
   data() {
@@ -220,5 +240,10 @@ export default {
   cursor: pointer;
   color: blue;
   float: right;
+}
+
+/* 调整输入框的长度 */
+.el-input {
+  width: 200px; /* 根据需要调整宽度 */
 }
 </style>
