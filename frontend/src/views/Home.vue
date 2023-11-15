@@ -53,7 +53,7 @@ export default {
     const router = useRouter();
     const userStore = useAuthStore();
 
-    // 获取用户名
+    // 获取用户信息
     const userid = computed(() => userStore.userid);
     const username = computed(() => userStore.username);
     const email = computed(() => userStore.email);
@@ -63,8 +63,7 @@ export default {
 
     // 在用户信息更新时自动更新用户名
     watchEffect(() => {
-      console.log('User info updated:', userStore.$state);
-      // 这里可以执行一些其他的逻辑
+      console.log('用户信息已更新:', userStore.$state);
     });
 
     const logout = () => {
@@ -87,7 +86,6 @@ export default {
       router,
       userStore,
       logout,
-      // 其他返回的数据
     };
   },
   data() {

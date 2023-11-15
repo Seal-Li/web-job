@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- 上方导航栏 -->
     <div class="nav-bar">
-      <div class="welcome">欢迎!</div>
+      <div class="welcome">欢迎用户<br>{{username}}!</div>
       <!-- 使用 router-link 实现导航 -->
       <router-link
         v-for="item in navItems"
@@ -120,8 +120,6 @@
       <el-form-item label="产品描述" prop="product_desc">
         <el-input v-model="newProduct.product_desc"></el-input>
       </el-form-item>
-
-      <!-- 其他表单项可以按照需要添加 -->
 
       <!-- 操作按钮 -->
       <div slot="footer" class="dialog-footer">
@@ -248,7 +246,6 @@ export default defineComponent({
       manufacturer: '',
       raw_material: '',
       product_desc: ''
-      // 可以根据需要添加其他属性
     });
 
     const handleAddData = async () => {
@@ -295,7 +292,6 @@ export default defineComponent({
       newProduct.raw_material = '';
       newProduct.product_desc = '';
 
-      // 可以根据需要清空其他属性
     };
 
     const editProduct = (product) => {
