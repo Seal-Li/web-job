@@ -37,9 +37,9 @@
         <!-- 在搜索框旁边添加价格范围搜索框 -->
         <div class="search-bar">
           <div class="search-inputs">
-            <input v-model="searchKeyword" type="text" placeholder="输入关键字搜索">
-            <input v-model.number="minPrice" type="number" placeholder="最低价格">
-            <input v-model.number="maxPrice" type="number" placeholder="最高价格">
+            <el-input v-model="searchKeyword" type="text" placeholder="输入关键字搜索"></el-input>
+            <el-input v-model.number="minPrice" type="number" placeholder="最低价格"></el-input>
+            <el-input v-model.number="maxPrice" type="number" placeholder="最高价格"></el-input>
           </div>
           <div class="search-buttons">
             <el-button @click="searchProducts" type="primary">搜索</el-button>
@@ -56,20 +56,36 @@
               <th>制造商</th>
               <th>生产原料</th>
               <th>产品描述</th>
+              <th v-if="usertype === 'Admin'">操作</th>
             </tr>
           </thead>
           <tbody>
+            <!-- 在表格中添加编辑状态的标志 -->
             <tr v-for="product in products" :key="product.product_id">
               <td>{{ product.product_id }}</td>
-              <td>{{ product.product_name }}</td>
-              <td>{{ product.price }}</td>
-              <td>{{ product.manufacturer }}</td>
-              <td>{{ product.raw_material }}</td>
-              <td>{{ product.product_desc }}</td>
-
-              <!-- 编辑和删除按钮，仅对Admin用户可见 -->
+              <td>
+                <span v-if="!product.editing">{{ product.product_name }}</span>
+                <el-input v-model="product.editingName" v-if="product.editing"></el-input>
+              </td>
+              <td>
+                <span v-if="!product.editing">{{ product.price }}</span>
+                <el-input v-model.number="product.editingPrice" v-if="product.editing"></el-input>
+              </td>
+              <td>
+                <span v-if="!product.editing">{{ product.manufacturer }}</span>
+                <el-input v-model="product.editingManufacturer" v-if="product.editing"></el-input>
+              </td>
+              <td>
+                <span v-if="!product.editing">{{ product.raw_material }}</span>
+                <el-input v-model="product.editingRawMaterial" v-if="product.editing"></el-input>
+              </td>
+              <td>
+                <span v-if="!product.editing">{{ product.product_desc }}</span>
+                <el-input v-model="product.editingDesc" v-if="product.editing"></el-input>
+              </td>
               <td v-if="usertype === 'Admin'">
-                <el-button @click="editProduct(product)">编辑</el-button>
+                <el-button v-if="!product.editing" @click="editProduct(product)">编辑</el-button>
+                <el-button v-else @click="saveProduct(product)">保存</el-button>
                 <el-button type="danger" @click="deleteProduct(product)">删除</el-button>
               </td>
             </tr>
@@ -91,11 +107,11 @@
 import axios from 'axios';
 import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
 import { useAuthStore } from '@/store/auth';
-import { ElButton, ElMessageBox } from 'element-plus'; // 导入 Element Plus 的按钮和消息框组件
+import { ElMessageBox } from 'element-plus';
 
 export default defineComponent({
   components: {
-    ElButton,
+    ElMessageBox
   },
   setup() {
     const userStore = useAuthStore();
@@ -155,7 +171,6 @@ export default defineComponent({
 
         // 计算总页数
         state.totalPages = Math.ceil(state.totalProducts / state.perPage);
-        // console.log('当前总页数:', state.totalPages);
       } catch (error) {
         console.error('未能获取到数据', error);
       }
@@ -164,7 +179,6 @@ export default defineComponent({
     const nextPage = () => {
       if (state.currentPage < state.totalPages) {
         state.currentPage++;
-        // console.log('下一页：', state.currentPage);
         fetchProducts();
       }
     };
@@ -172,7 +186,6 @@ export default defineComponent({
     const prevPage = () => {
       if (state.currentPage > 1) {
         state.currentPage--;
-        // console.log('上一页：', state.currentPage);
         fetchProducts();
       }
     };
@@ -194,25 +207,68 @@ export default defineComponent({
     });
 
     const addNewData = () => {
-      // 添加新数据操作，您可以根据需要进行相应的处理
+      // 清空表单数据
+      clearForm();
+      // 将dialogVisible设置为true，显示弹窗
+      dialogVisible.value = true;
       console.log('添加新数据');
     };
 
     const editProduct = (product) => {
-      // 编辑产品操作，您可以根据需要进行相应的处理
-      console.log('编辑产品', product);
+      // 设置编辑状态
+      product.editing = true;
+      // 缓存原始数据
+      product.editingName = product.product_name;
+      product.editingPrice = product.price;
+      product.editingManufacturer = product.manufacturer;
+      product.editingRawMaterial = product.raw_material;
+      product.editingDesc = product.product_desc;
     };
 
-    const deleteProduct = (product) => {
-      // 删除产品操作，您可以根据需要进行相应的处理
-      ElMessageBox.confirm('确定删除该产品吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        console.log('删除产品', product);
-        // 在这里执行删除产品的逻辑
-      });
+    const saveProduct = async (product) => {
+      // 发送请求保存数据的逻辑
+      try {
+        const response = await axios.post('http://localhost:3000/update-product', {
+          product_id: product.product_id,
+          product_name: product.editingName,
+          price: product.editingPrice,
+          manufacturer: product.editingManufacturer,
+          raw_material: product.editingRawMaterial,
+          product_desc: product.editingDesc,
+        });
+        console.log("修改完成")
+        if (response.data.success) {
+          // 保存成功后，退出编辑状态
+          product.editing = false;
+          // 重新加载数据
+          fetchProducts();
+        } else {
+          console.error('保存失败');
+        }
+      } catch (error) {
+        console.error('保存失败', error);
+      }
+    };
+
+    const deleteProduct = async (product) => {
+      try {
+        console.log("删除动作开始");
+        const confirmed = await ElMessageBox.confirm('确定删除该产品吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).catch(() => {});
+        console.log("删除动作提示完毕");
+        if (confirmed) {
+          // 发送请求将产品从后端删除
+          await axios.post('http://localhost:3000/delete-product', { product_id: product.product_id });
+          console.log("删除请求已发送");
+          // 刷新产品列表
+          fetchProducts();
+        }
+      } catch (error) {
+        console.error('删除产品时出错', error);
+      }
     };
 
     return {
@@ -228,129 +284,15 @@ export default defineComponent({
       searchProducts,
       sideItemsInRows,
       addNewData,
+      editProduct,
+      saveProduct,
+      deleteProduct,
+      ElMessageBox
     };
   },
 });
 </script>
 
 <style scoped>
-.home-container {
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    background: none !important;
-    height: 100%; /* 高度为视口高度 */
-}
-
-.nav-bar {
-    background-color: #784d42;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    color: #fff;
-}
-
-.nav-item, .side-item {
-    padding: 8px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    font-weight: bold; /* 加粗字体 */
-    text-decoration: none; /* 取消下划线 */
-    color: #fff; /* 字体颜色 */
-}
-
-.welcome {
-    width: 100px;
-    margin-left: 20px;
-    color: blue;
-}
-
-.logout {
-    cursor: pointer;
-    color: blue;
-    margin-right: 20px;
-}
-
-.main-container {
-    display: flex;
-    height: 100%; /* 高度为父容器高度 */
-}
-
-.side-bar {
-    width: 150px; /* 左侧导航栏的宽度 */
-    height: 100vh; /* 高度为父容器高度 */
-    overflow-y: auto;
-    background-color: #784d42; /* 左侧导航栏的背景颜色 */
-    padding-top: 30px;  
-    padding-left: 30px;
-    transition: width 0.3s;
-}
-
-.hide {
-    width: 0;
-}
-
-.side-row {
-    margin-bottom: 30px;
-}
-
-.content {
-    flex: 1; /* 填充剩余空间 */
-    padding: 20px; /* 设置内容区域的内边距 */
-    overflow: auto; /* 允许内容溢出时显示滚动条 */
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #ddd; /* 添加边框 */
-}
-
-th {
-    font-weight: bold; /* 表头文字加粗显示 */
-    background-color: #f2f2f2; /* 表头背景颜色 */
-}
-
-/* 设置每列的固定宽度 */
-th:nth-child(1), td:nth-child(1) { width: 40px; } /* 产品ID列宽度 */
-th:nth-child(2), td:nth-child(2) { width: 150px; } /* 产品名称列宽度 */
-th:nth-child(3), td:nth-child(3) { width: 80px; } /* 价格列宽度 */
-th:nth-child(4), td:nth-child(4) { width: 120px; } /* 制造商列宽度 */
-th:nth-child(5), td:nth-child(5) { width: 120px; } /* 生产原料列宽度 */
-th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
-
-/* 分页控件样式 */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px; /* 调整上下间距 */
-}
-
-.pagination-button {
-  margin: 0 10px; /* 调整按钮间距 */
-}
-
-.search-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.search-inputs {
-  display: flex;
-  gap: 30px; /* 你可以根据需要调整间距 */
-}
-
-.search-buttons {
-  display: flex;
-  gap: 30px; /* 你可以根据需要调整间距 */
-}
-
+@import "../css/BeerCategory.css";
 </style>

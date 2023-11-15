@@ -300,7 +300,56 @@ app.post('/update-user-info', async (req, res) => {
   }
 });
 
+// 管理员更新数据的路由
+app.post('/update-product', async (req, res) => {
+  try {
+    const { product_id, product_name, price, manufacturer, raw_material, product_desc } = req.body;
 
+    // 在此处执行更新数据库的逻辑
+    const connection = await pool.getConnection();
+    const [result] = await connection.query(
+      'UPDATE products SET product_name = ?, price = ?, manufacturer = ?, raw_material = ?, product_desc=? WHERE product_id = ?',
+      [product_name, price, manufacturer, raw_material, product_desc, product_id]
+    );
+    connection.release();
+
+    // 检查更新是否成功
+    if (result.affectedRows === 1) {
+      res.status(200).json({ success: true, message: '更新成功'});
+    } else {
+      res.status(500).json({ success: false, message: '更新失败' });
+    }
+  } catch (error) {
+    console.error('更新用户信息时出错：', error);
+    res.status(500).json({ message: '服务器错误' });
+  }
+});
+
+// 删除产品的路由
+app.post('/delete-product', async (req, res) => {
+  try {
+    const productIdToDelete = req.body.product_id;
+    const connection = await pool.getConnection();
+
+    // 构建 SQL 查询
+    const sql = 'DELETE FROM products WHERE product_id = ?';
+
+    // 执行 SQL 查询
+    const results = await connection.query(sql, [productIdToDelete]);
+
+    if (results[0].affectedRows === 0) {
+      res.status(404).json({ success: false, message: '未找到该产品' });
+    } else {
+      res.status(200).json({ success: true, message: '已删除该产品' });
+    }
+  } catch (error) {
+    console.error('删除产品时出错:', error);
+    res.status(500).json({ error: '删除产品时出错' });
+  }
+});
+
+
+// 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

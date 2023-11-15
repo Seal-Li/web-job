@@ -26,8 +26,8 @@
         <!-- 你想展示的独立于其他页面的信息 -->
         <div class="product-group">
           <div v-for="(product, index) in latestProducts" :key="product.id" class="product-box">
-            <img :src="product.image" alt="Product Image">
             <h3>{{ product.name }}</h3>
+            <img :src="product.image" alt="Product Image">
             <p>介绍： {{ product.description }}</p>
             <p>酒精度： {{ product.alcoholContent }}</p>
             <p>原麦汁浓度： {{ product.originalGravity }}</p>

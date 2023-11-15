@@ -1,0 +1,118 @@
+.home-container {
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    background: none !important;
+    height: 100%; /* 高度为视口高度 */
+}
+
+.nav-bar {
+    background-color: #784d42;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+}
+
+.nav-item, .side-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-weight: bold; /* 加粗字体 */
+    text-decoration: none; /* 取消下划线 */
+    color: #fff; /* 字体颜色 */
+}
+
+.welcome {
+    width: 100px;
+    margin-left: 20px;
+    color: blue;
+}
+
+.logout {
+    cursor: pointer;
+    color: blue;
+    margin-right: 20px;
+}
+
+.main-container {
+    display: flex;
+    height: 100%; /* 高度为父容器高度 */
+}
+
+.side-bar {
+    width: 150px; /* 左侧导航栏的宽度 */
+    height: 100vh; /* 高度为父容器高度 */
+    overflow-y: auto;
+    background-color: #784d42; /* 左侧导航栏的背景颜色 */
+    padding-top: 30px;  
+    padding-left: 30px;
+    transition: width 0.3s;
+}
+
+.hide {
+    width: 0;
+}
+
+.side-row {
+    margin-bottom: 30px;
+}
+
+.content {
+    flex: 1; /* 填充剩余空间 */
+    padding: 20px; /* 设置内容区域的内边距 */
+    overflow: auto; /* 允许内容溢出时显示滚动条 */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd; /* 添加边框 */
+}
+
+th {
+    font-weight: bold; /* 表头文字加粗显示 */
+    background-color: #f2f2f2; /* 表头背景颜色 */
+}
+
+/* 设置每列的固定宽度 */
+th:nth-child(1), td:nth-child(1) { width: 40px; } /* 产品ID列宽度 */
+th:nth-child(2), td:nth-child(2) { width: 150px; } /* 产品名称列宽度 */
+th:nth-child(3), td:nth-child(3) { width: 80px; } /* 价格列宽度 */
+th:nth-child(4), td:nth-child(4) { width: 120px; } /* 制造商列宽度 */
+th:nth-child(5), td:nth-child(5) { width: 120px; } /* 生产原料列宽度 */
+th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
+
+/* 分页控件样式 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px; /* 调整上下间距 */
+}
+
+.pagination-button {
+  margin: 0 10px; /* 调整按钮间距 */
+}
+
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-inputs {
+  display: flex;
+  gap: 30px; /* 你可以根据需要调整间距 */
+}
+
+.search-buttons {
+  display: flex;
+  gap: 30px; /* 你可以根据需要调整间距 */
+}
