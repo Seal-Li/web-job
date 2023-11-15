@@ -13,6 +13,10 @@ import UserCenter from '../views/UserCenter.vue';
 import MyOrders from '../views/MyOrders.vue';
 import MyFavorites from '../views/MyFavorites.vue';
 import MyAddresses from '../views/MyAddresses.vue';
+import FeedbackStatus from '../views/FeedbackStatus.vue';
+import ReleaseRecord from '../views/ReleaseRecord.vue';
+import OfferMeOrder from '../views/OfferMeOrder.vue';
+
 
 import { useAuthStore } from '@/store/auth';
 
@@ -92,6 +96,24 @@ const router = createRouter({
       path: '/myAddresses',
       name: 'myAddresses',
       component: MyAddresses,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/feedbackStatus',
+      name: 'feedbackStatus',
+      component: FeedbackStatus,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/releaseRecord',
+      name: 'releaseRecord',
+      component: ReleaseRecord,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/offerMeOrder',
+      name: 'offerMeOrder',
+      component: OfferMeOrder,
       meta: { requiresAuth: true }
     },
   ],
