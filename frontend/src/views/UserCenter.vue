@@ -74,15 +74,16 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth';
 import { computed, watchEffect, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
+    const router = useRouter();
     const userStore = useAuthStore();
 
     const userTypes = [
       { value: 'Customer', label: '消费者' },
       { value: 'Dealer', label: '经销商' },
-      { value: 'Admin', label: '管理员' },
     ];
 
     const isUserTypeDisabled = (type) => {
@@ -159,8 +160,13 @@ export default {
     const logout = () => {
       // 处理退出登录逻辑
       console.log('执行退出登录操作');
+      // 更新登录状态
+      console.log("开始执行退出")
+      userStore.logout();
+      console.log("执行退出")
+
       // 导航到登录页面并替换当前路由历史
-      this.$router.push('/');
+      router.push('/');
     };
 
     return {
@@ -178,6 +184,7 @@ export default {
       logout,
       userTypes,
       isUserTypeDisabled,
+      userStore
     };
   },
   data() {
