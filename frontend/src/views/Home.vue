@@ -23,7 +23,6 @@
 
       <!-- 右侧内容区域 -->
       <div class="content">
-        <!-- 你想展示的独立于其他页面的信息 -->
         <div class="product-group">
           <h1 class="home-title">{{ titleText }}</h1>
           <div v-for="(product, index) in latestProducts" :key="product.id" class="product-box">
@@ -33,11 +32,10 @@
             <p>酒精度： {{ product.alcoholContent }}</p>
             <p>原麦汁浓度： {{ product.originalGravity }}</p>
             <p>价格: ￥{{ product.price.toFixed(2) }}</p>
-            <!-- 添加下面的判断，如果是每行的最后一个商品，则添加一个占位元素 -->
+            <!-- 添加判断，如果是每行的最后一个商品，则添加一个占位元素 -->
             <div v-if="(index + 1) % productsPerRow === 0" class="filler"></div>
           </div>
         </div>
-        <!-- 其他内容 ... -->
         <router-view></router-view>
       </div>
     </div>
@@ -153,7 +151,6 @@ export default {
           originalGravity: '19.8 P',
           price: 729,
         },
-        // 添加更多新品...
       ],
     };
   },
@@ -198,6 +195,7 @@ export default {
   width: 29%; /* 每个商品框占据 30% 的宽度，以适应三列布局 */
   margin: 10px;
   text-align: left; /* 居左显示 */
+  border-radius: 5px;
 }
 
 .product-box img {

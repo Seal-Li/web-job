@@ -378,5 +378,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
+@import "../css/Home.css";
 @import "../css/BeerCategory.css";
 </style>

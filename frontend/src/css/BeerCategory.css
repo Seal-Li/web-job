@@ -1,70 +1,3 @@
-.home-container {
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    background: none !important;
-    height: 100%; /* 高度为视口高度 */
-}
-
-.nav-bar {
-    background-color: #00913f;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    color: #fff;
-}
-
-.nav-item, .side-item {
-    padding: 8px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    font-weight: bold; /* 加粗字体 */
-    text-decoration: none; /* 取消下划线 */
-    color: #fff; /* 字体颜色 */
-}
-
-.welcome {
-    width: 100px;
-    margin-left: 20px;
-    color: blue;
-}
-
-.logout {
-    cursor: pointer;
-    color: blue;
-    margin-right: 20px;
-}
-
-.main-container {
-    display: flex;
-    height: 100%; /* 高度为父容器高度 */
-}
-
-.side-bar {
-    width: 150px; /* 左侧导航栏的宽度 */
-    height: 100vh; /* 高度为父容器高度 */
-    overflow-y: auto;
-    background-color: #00913f; /* 左侧导航栏的背景颜色 */
-    padding-top: 30px;  
-    padding-left: 30px;
-    transition: width 0.3s;
-}
-
-.hide {
-    width: 0;
-}
-
-.side-row {
-    margin-bottom: 30px;
-}
-
-.content {
-    flex: 1; /* 填充剩余空间 */
-    padding: 20px; /* 设置内容区域的内边距 */
-    overflow: auto; /* 允许内容溢出时显示滚动条 */
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -109,12 +42,12 @@ th:nth-child(6), td:nth-child(6) { width: 220px; } /* 产品描述列宽度 */
 
 .search-inputs {
   display: flex;
-  gap: 30px; /* 你可以根据需要调整间距 */
+  gap: 30px; /* 根据需要调整间距 */
 }
 
 .search-buttons {
   display: flex;
-  gap: 30px; /* 你可以根据需要调整间距 */
+  gap: 30px; /* 根据需要调整间距 */
 }
 
 .el-dialog .el-dialog__title {

@@ -1,5 +1,3 @@
-<!-- ForgetPassword.vue -->
-
 <template>
   <div class="forget-password-container">
     <div class="form-container">
@@ -50,17 +48,17 @@ export default {
       formRules: {
         account: [
           { required: true, message: '请输入注册的手机号或邮箱', trigger: 'blur' },
-          // Add custom validation rule for account existence check
+          // 添加账号存在性验证
           { validator: this.validateAccountExistence, trigger: 'blur' },
         ],
         verificationCode: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          // Add custom validation rule for verification code check
+          // 添加验证码验证规则
           { validator: this.validateVerificationCode, trigger: 'blur' },
         ],
         newPassword: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
-          // Add custom validation rule for password check
+          // 添加密码验证规则
           { validator: this.validatePassword, trigger: 'blur' },
         ],
         confirmPassword: [
@@ -141,7 +139,7 @@ export default {
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('../static/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../static/bgpic.jpg') center/cover no-repeat;
 }
 
 .form-container {

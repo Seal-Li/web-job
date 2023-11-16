@@ -64,8 +64,6 @@
             </el-select>
           </div>
         </div>
-
-        <!-- 其他内容 ... -->
         <router-view></router-view>
       </div>
     </div>
@@ -82,7 +80,7 @@ export default {
     const userStore = useAuthStore();
 
     const userTypes = [
-      { value: 'Consumer', label: '消费者' },
+      { value: 'Customer', label: '消费者' },
       { value: 'Dealer', label: '经销商' },
       { value: 'Admin', label: '管理员' },
     ];
@@ -109,8 +107,7 @@ export default {
 
     // 在用户信息更新时自动更新用户名
     watchEffect(() => {
-      console.log('User info updated:', userStore.$state);
-      // 这里可以执行一些其他的逻辑
+      console.log('用户信息已更新:', userStore.$state);
     });
 
     // 保存信息到后端数据库

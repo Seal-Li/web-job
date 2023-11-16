@@ -51,7 +51,7 @@
     height: calc(100vh + 200px); /* 高度为父容器高度 */
     overflow-y: auto;
     background-color: #00913f; /* 左侧导航栏的背景颜色 */
-    padding-top: 30px;  
+    padding-top: 80px;  
     padding-left: 30px;
     transition: width 0.3s;
 }

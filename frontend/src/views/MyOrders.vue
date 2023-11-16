@@ -23,11 +23,9 @@
 
       <!-- 右侧内容区域 -->
       <div class="content">
-        <!-- 你想展示的独立于其他页面的信息 -->
         <div>
           <h2>欢迎来到我的订单页面</h2>
         </div>
-        <!-- 其他内容 ... -->
         <router-view></router-view>
       </div>
     </div>

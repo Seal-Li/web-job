@@ -42,6 +42,7 @@ export default defineComponent({
       remember: false,
     });
 
+    // TODO: 记住密码功能待实现
     // 尝试从 localStorage 中获取保存的用户信息
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {

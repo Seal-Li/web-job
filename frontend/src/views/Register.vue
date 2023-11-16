@@ -1,5 +1,3 @@
-<!-- Register.vue -->
-
 <template>
   <div class="register-container">
     <el-form :model="registerForm" :rules="registerRules" label-width="120px" ref="registerForm" class="register-form">
@@ -45,7 +43,7 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        userType: '', // 初始值为 "Customer"
+        userType: 'Customer', // 初始值为 "Customer"
         email: '',
         phoneNumber: '',
       },
@@ -57,8 +55,8 @@ export default {
               trigger: 'blur' 
           },
           { 
-              pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{6,12}$/, 
-              message: '只能使用英文字符和数字', 
+              pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{3,12}$/, 
+              message: '只能使用3-12位英文字符和数字', 
               trigger: 'blur' 
           }
         ],
@@ -166,7 +164,7 @@ export default {
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('../static/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../static/bgpic.jpg') center/cover no-repeat; 
 }
 
 .register-form {
@@ -174,9 +172,9 @@ export default {
   z-index: 1; /* 将表单的 z-index 设为 1，使其位于背景图片上方 */
   width: 400px;
   padding: 20px;
-  border: 1px solid #ebeef5; /* 边框样式，可以根据需要调整颜色和宽度 */
+  border: 1px solid #ebeef5; /* 边框样式，可以调整颜色和宽度 */
   border-radius: 5px; /* 可选，添加圆角效果 */
-  background: rgba(255, 255, 255, 0.8); /* 背景颜色，可以根据需要调整透明度 */
+  background: rgba(255, 255, 255, 0.8); /* 背景颜色，可以调整透明度 */
 }
 
 .register-form .el-form-item {
