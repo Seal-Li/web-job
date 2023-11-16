@@ -135,6 +135,7 @@ import axios from 'axios';
 import { defineComponent, ref, reactive, computed, onMounted, toRefs } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import { ElMessageBox, ElDialog} from 'element-plus';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   mounted() {
@@ -146,6 +147,7 @@ export default defineComponent({
     ElDialog,
   },
   setup() {
+    const router = useRouter();
     const userStore = useAuthStore();
     const { username, email, telphone, usertype, money } = toRefs(userStore.$state);
     const dialogVisible = ref(false);
@@ -351,6 +353,16 @@ export default defineComponent({
       }
     };
 
+    const logout = () => {
+      // 处理退出登录逻辑
+      console.log('执行退出登录操作');
+      // 更新登录状态
+      userStore.logout();
+
+      // 导航到登录页面并替换当前路由历史
+      router.push('/');
+    };
+
     return {
       ...toRefs(state),
       username,
@@ -371,7 +383,8 @@ export default defineComponent({
       dialogVisible,
       newProduct,
       handleAddData,
-      clearForm
+      clearForm,
+      logout,
     };
   },
 });
