@@ -174,7 +174,7 @@ export default defineComponent({
       perPage: 5,
       totalProducts: 0,
       searchKeyword: '',
-      totalPages: 0,
+      totalPages: 1,
       minPrice: null,
       maxPrice: null,
     });

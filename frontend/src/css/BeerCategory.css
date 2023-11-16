@@ -15,9 +15,9 @@ th {
 }
 
 /* 设置每列的固定宽度 */
-th:nth-child(1), td:nth-child(1) { width: 60px; } /* 产品ID列宽度 */
+th:nth-child(1), td:nth-child(1) { width: 40px; } /* 产品ID列宽度 */
 th:nth-child(2), td:nth-child(2) { width: 130px; } /* 产品名称列宽度 */
-th:nth-child(3), td:nth-child(3) { width: 70px; } /* 价格列宽度 */
+th:nth-child(3), td:nth-child(3) { width: 60px; } /* 价格列宽度 */
 th:nth-child(4), td:nth-child(4) { width: 120px; } /* 制造商列宽度 */
 th:nth-child(5), td:nth-child(5) { width: 150px; } /* 生产原料列宽度 */
 th:nth-child(6), td:nth-child(6) { width: 220px; } /* 产品描述列宽度 */
