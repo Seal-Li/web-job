@@ -25,6 +25,7 @@
       <div class="content">
         <!-- 你想展示的独立于其他页面的信息 -->
         <div class="product-group">
+          <h1 class="home-title">{{ titleText }}</h1>
           <div v-for="(product, index) in latestProducts" :key="product.id" class="product-box">
             <h3>{{ product.name }}</h3>
             <img :src="product.image" alt="Product Image">
@@ -97,6 +98,7 @@ export default {
       itemsPerRow: 1,
       productsPerRow: 3,
       isSideBarHidden: false,
+      titleText: '超高端啤酒上架，速来选购，珍品，真醇，臻香',
       navItems: [
         { id: 0, label: '首页', routeName: 'Home' },
         { id: 1, label: '推荐', routeName: 'recommend' },
@@ -170,6 +172,16 @@ export default {
 
 <style scoped>
 @import "../css/Home.css";
+
+.home-title {
+  text-align: center;
+  font-size: 36px;
+  display: inline-block;
+  background: linear-gradient(15deg, #ff0000, #00ff00, #0000ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .product-group {
   display: flex;

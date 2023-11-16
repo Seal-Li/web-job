@@ -7,7 +7,7 @@
 }
 
 .nav-bar {
-    background-color: #784d42;
+    background-color: #00913f;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +45,7 @@
     width: 150px; /* 左侧导航栏的宽度 */
     height: 100vh; /* 高度为父容器高度 */
     overflow-y: auto;
-    background-color: #784d42; /* 左侧导航栏的背景颜色 */
+    background-color: #00913f; /* 左侧导航栏的背景颜色 */
     padding-top: 30px;  
     padding-left: 30px;
     transition: width 0.3s;
@@ -82,12 +82,12 @@ th {
 }
 
 /* 设置每列的固定宽度 */
-th:nth-child(1), td:nth-child(1) { width: 40px; } /* 产品ID列宽度 */
-th:nth-child(2), td:nth-child(2) { width: 150px; } /* 产品名称列宽度 */
-th:nth-child(3), td:nth-child(3) { width: 80px; } /* 价格列宽度 */
+th:nth-child(1), td:nth-child(1) { width: 60px; } /* 产品ID列宽度 */
+th:nth-child(2), td:nth-child(2) { width: 130px; } /* 产品名称列宽度 */
+th:nth-child(3), td:nth-child(3) { width: 70px; } /* 价格列宽度 */
 th:nth-child(4), td:nth-child(4) { width: 120px; } /* 制造商列宽度 */
-th:nth-child(5), td:nth-child(5) { width: 120px; } /* 生产原料列宽度 */
-th:nth-child(6), td:nth-child(6) { width: 240px; } /* 产品描述列宽度 */
+th:nth-child(5), td:nth-child(5) { width: 150px; } /* 生产原料列宽度 */
+th:nth-child(6), td:nth-child(6) { width: 220px; } /* 产品描述列宽度 */
 
 /* 分页控件样式 */
 .pagination {

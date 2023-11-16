@@ -12,7 +12,7 @@
 }
 
 .nav-bar {
-    background-color: #784d42;
+    background-color: #00913f;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,9 +48,9 @@
 
 .side-bar {
     width: 150px; /* 左侧导航栏的宽度 */
-    height: 100vh; /* 高度为父容器高度 */
+    height: calc(100vh + 200px); /* 高度为父容器高度 */
     overflow-y: auto;
-    background-color: #784d42; /* 左侧导航栏的背景颜色 */
+    background-color: #00913f; /* 左侧导航栏的背景颜色 */
     padding-top: 30px;  
     padding-left: 30px;
     transition: width 0.3s;
