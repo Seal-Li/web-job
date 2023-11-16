@@ -101,9 +101,9 @@ export default {
               trigger: 'blur' 
           },
           { 
-              pattern: /^1((34[0-8])|(8\d{2})|(([35][0-35-9]|4[579]|66|7[35678]|9[1389])\d{1}))\d{7}$/, 
+              pattern: /^(?:(?:\+|00)86)?1[3-9]\d{9}$/, 
               message: '请输入有效的手机号码', 
-              trigger: 'blur' 
+              trigger: ['blur', 'change'] 
           }
         ]
       },
