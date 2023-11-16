@@ -1,7 +1,7 @@
 # 啤酒用户平台
 - **首页展示**
 
-![首页展示](images\homePage.png)
+![首页展示](images/homePage.png)
 
 ## 项目介绍
 - **功能说明**
@@ -14,14 +14,14 @@
 ![组织关系](images/组织关系.png)
 
 - **登录逻辑**
-![登录逻辑](images\loginLogic.png)
+![登录逻辑](images/loginLogic.png)
 
 - **管理员新增数据逻辑**
-![管理员新增数据逻辑](images\addNewData.png)
+![管理员新增数据逻辑](images/addNewData.png)
 
 
 - **数据流示意**
-![数据流示意](\images/dataFlow.png)
+![数据流示意](images/dataFlow.png)
 
 ## 项目拆解
 
@@ -34,7 +34,7 @@
 如果密码错误，则提示密码错误，重新输入密码或前往找回密码；
 
 - **登录UI展示**
-![登录UI展示](images\loginPage.png)
+![登录UI展示](images/loginPage.png)
 
 ### 用户注册
 
@@ -45,7 +45,7 @@
 注册成功后自动跳转到登录页
 
 - **注册UI展示**
-![注册UI展示](images\registerPage.png)
+![注册UI展示](images/registerPage.png)
 
 ### 找回密码
 
@@ -54,7 +54,7 @@
 密码重置成功后立刻跳转到登陆页面；
 
 - **找回密码UI展示**
-![找回密码UI展示](images\forgetPasswordPage.png)
+![找回密码UI展示](images/forgetPasswordPage.png)
 
 ### 首页
 首页设置上导航栏和左侧导航栏，欢迎标语和退出登录按钮
@@ -66,7 +66,7 @@
 首页展示内容为最新上架的产品；
 
 - **首页UI展示**
-![首页UI展示](images\homePage.png)
+![首页UI展示](images/homePage.png)
 
 ### 用户中心
 用户中心展示用户的信息，如：用户名、注册手机号、绑定邮箱和用户类型；
@@ -76,7 +76,7 @@
 管理员不可以修改用户类型
 
 - **用户中心UI展示**
-![用户中心UI展示](images\userCenterPage.png)
+![用户中心UI展示](images/userCenterPage.png)
 
 ### 啤酒品类
 
@@ -87,7 +87,7 @@
 管理员额外需要可以添加、删除、修改产品信息；（该部分功能对非管理员用户不可见）
 
 - 啤酒品类UI展示
-![啤酒品类UI展示](images\beerCategoryPage.png)
+![啤酒品类UI展示](images/beerCategoryPage.png)
 
 
 ## 技术设计
