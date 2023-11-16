@@ -145,7 +145,7 @@ export default {
           this.$router.push('/');
         } else {
           // 注册失败，保存错误消息
-          this.registrationError = response.data.message || '注册失败'; // 如果没有明确的错误消息，使用默认消息
+          this.registrationError = response.data.message || '注册失败'; 
           this.$message.error('注册失败: ');
         }
       } catch (error) {

@@ -48,7 +48,7 @@
 
 .side-bar {
     width: 150px; /* 左侧导航栏的宽度 */
-    height: calc(100vh + 200px); /* 高度为父容器高度 */
+    height: calc(100vh + 150px); /* 高度为父容器高度 */
     overflow-y: auto;
     background-color: #00913f; /* 左侧导航栏的背景颜色 */
     padding-top: 80px;  

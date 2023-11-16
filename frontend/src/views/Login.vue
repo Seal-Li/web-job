@@ -146,7 +146,7 @@ export default defineComponent({
   align-items: center;
   height: 100vh;
   position: relative;
-  background: url('../static/bgpic.jpg') center/cover no-repeat; /* 替换为你的背景图片 URL */
+  background: url('../static/bgpic.jpg') center/cover no-repeat; 
 }
 
 .login-card {
