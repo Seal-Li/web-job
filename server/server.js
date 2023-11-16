@@ -24,7 +24,7 @@ app.use(productDeleteRoutes);
 app.use(productAddRoutes);
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = 1903;
 
 // 启动服务器
 app.listen(PORT, () => {

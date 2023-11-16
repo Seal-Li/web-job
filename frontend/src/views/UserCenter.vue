@@ -220,12 +220,13 @@ export default {
 
 .user-info-container {
   margin: 20px auto;
-  padding: 15px;
-  border: 2px solid #ddd;
+  padding: 25px;
+  border: 1px solid #ddd;
   width: 60%;
   text-align: left;
   font-size: 18px;
   line-height: 4; /* 调整行高 */
+  border-radius: 5px;
 }
 
 .info-label {

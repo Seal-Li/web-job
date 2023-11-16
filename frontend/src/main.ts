@@ -15,7 +15,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 const myPinia = createPinia()
 myPinia.use(piniaPluginPersistedstate)
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'http://localhost:1903';
 
 
 
