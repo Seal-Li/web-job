@@ -10,7 +10,7 @@ router.post('/register', async (req, res) => {
     const { username, password, confirmPassword, email, userType, phoneNumber } = req.body;
     try {
         const connection = await pool.getConnection();
-        await connection.beginTransaction();
+        await connection.beginTransaction(); // 开始新事务
 
         // 检查邮箱是否已存在
         const emailExistsQuery = 'SELECT * FROM users WHERE email = ?';
@@ -38,8 +38,6 @@ router.post('/register', async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`;
 
         await connection.execute(insertUserQuery, [userId, username, hashedPassword, email, phoneNumber, userType]);
-
-        // await connection.execute(insertUserQuery, [userId, username, password, email, phoneNumber, userType]);
 
         await connection.commit();
         connection.release();

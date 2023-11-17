@@ -1,5 +1,3 @@
-// config.js
-
 module.exports = {
     database: {
       host: 'localhost',

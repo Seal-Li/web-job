@@ -37,8 +37,8 @@ export default defineComponent({
     const userStore = useAuthStore(); // 获取 user store 实例
 
     const loginForm = reactive({
-      account: '15965825404',
-      password: 'Lhb123!',
+      account: '',
+      password: '',
       remember: false,
     });
 

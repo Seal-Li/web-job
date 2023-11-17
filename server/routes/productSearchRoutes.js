@@ -1,4 +1,3 @@
-// productSearchRoutes.js
 const express = require('express');
 const { pool } = require('../database');
 
@@ -13,8 +12,8 @@ router.get('/search-products', async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const keyword = req.query.keyword || '';
-        const minPrice = req.query.minPrice; // 注意：这里不需要转换为整数
-        const maxPrice = req.query.maxPrice; // 同上
+        const minPrice = req.query.minPrice; 
+        const maxPrice = req.query.maxPrice; 
 
         // 计算偏移量
         const offset = (page - 1) * limit;
@@ -59,7 +58,6 @@ router.get('/search-products', async (req, res) => {
         // 计算满足条件的产品总记录数，用于前端分页控制
         const [productsAll] = await connection.execute(query_unlimit, query_unlimitParams);
         const totalProducts = productsAll.length;
-        // console.log("结果总数：", totalProducts)
 
         connection.release();
 
